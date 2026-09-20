@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarnFast - Settings</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .header { background: #00A86B; color: white; padding: 15px; border-radius: 10px; text-align: center; font-weight: bold; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .menu-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; color: #333; text-decoration: none; font-size: 16px; }
+        .menu-item:last-child { border-bottom: none; }
+        .btn-logout { width: 100%; background: #FF3B30; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 16px; margin-top: 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="header">⚙️ Settings (सेटिंग्स)</div>
+
+    <div class="card">
+        <div class="menu-item">
+            <span>👤 User Profile (यूज़र प्रोफाइल)</span>
+            <span id="user-email" style="color: #666; font-weight: bold;">test@user.com</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <a href="mailto:your-email@gmail.com" class="menu-item">
+            <span>📞 Help & Support (मदद और सहायता)</span>
+            <span style="color: #00A86B;">👉</span>
+        </a>
+        <a href="#" class="menu-item">
+            <span>📜 Terms & Conditions (नियम और शर्तें)</span>
+            <span>👉</span>
+        </a>
+        <a href="#" class="menu-item">
+            <span>🔒 Privacy Policy (गोपनीयता नीति)</span>
+            <span>👉</span>
+        </a>
+    </div>
+
+    <button class="btn-logout" onclick="alert('Logged Out Successfully!')">🚪 Log Out (लॉग आउट)</button>
+
+</body>
+</html>
