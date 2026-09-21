@@ -48,6 +48,17 @@ footer p{margin-top:10px}
 </style>
 </head>
 <body>
+<!-- Login & Sign Up Form Start -->
+<div id="auth-container" style="background: #ffffff; padding: 25px; border-radius: 15px; margin: 20px auto; max-width: 350px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-family: sans-serif; text-align: center;">
+    <h3 style="color: #00A86B; margin-bottom: 20px;"> Login / Sign Up</h3>
+    <input type="email" id="auth-email" placeholder="   (Enter Email)" style="width: 90%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px;">
+    <input type="password" id="auth-password" placeholder="  (Enter Password)" style="width: 90%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px;">
+    <button onclick="createNewUser(document.getElementById('auth-email').value, document.getElementById('auth-password').value)" style="width: 96%; background: #00A86B; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px;">
+         Register / Sign Up (  )
+    </button>
+</div>
+<!-- Login & Sign Up Form End -->
+
 <nav>
   <div class="logo">Earn<span>Fast</span></div>
   <div class="navlinks">
