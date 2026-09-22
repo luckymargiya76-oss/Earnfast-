@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>EarnFast</title>
+<meta name="theme-color" content="#2563EB">
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#172033}button,input{font:inherit}.hidden{display:none!important}
+.auth{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(160deg,#2563eb,#60a5fa)}.auth-card{width:100%;max-width:390px;background:#fff;border-radius:24px;padding:26px;box-shadow:0 18px 45px #0003}.logo{font-size:32px;font-weight:800;color:#2563eb;text-align:center}.tag{text-align:center;color:#667085;margin:5px 0 22px}.field{width:100%;padding:14px;border:1px solid #d0d5dd;border-radius:12px;margin:7px 0;outline:none}.field:focus{border-color:#2563eb}.btn{width:100%;padding:14px;border:0;border-radius:12px;background:#2563eb;color:white;font-weight:700;margin-top:8px}.btn.secondary{background:#eef2ff;color:#2563eb}.msg{min-height:20px;text-align:center;font-size:13px;margin-top:10px;color:#667085}.link{text-align:center;color:#2563eb;font-weight:700;margin-top:16px;cursor:pointer}
+#app{min-height:100vh;padding-bottom:76px}.top{background:#2563eb;color:#fff;padding:22px 18px 28px;border-radius:0 0 24px 24px}.toprow{display:flex;justify-content:space-between;align-items:center}.brand{font-size:25px;font-weight:800}.hello{opacity:.9;margin-top:18px;font-size:14px}.balance{font-size:30px;font-weight:800;margin:5px 0}.conversion{opacity:.9;font-size:13px}.actions{display:flex;gap:10px;margin-top:18px}.action{flex:1;border:0;border-radius:12px;padding:12px;background:#fff;color:#2563eb;font-weight:800}
+.page{padding:16px}.section-title{font-size:18px;font-weight:800;margin:8px 0 12px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.feature{background:#fff;border-radius:16px;padding:17px;box-shadow:0 3px 12px #0000000b;min-height:112px}.icon{font-size:26px}.feature b{display:block;margin-top:8px}.feature small{color:#667085}.list{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 3px 12px #0000000b}.item{padding:16px;border-bottom:1px solid #eef0f4;display:flex;justify-content:space-between;align-items:center}.item:last-child{border-bottom:0}.pill{font-size:12px;color:#2563eb;background:#eef2ff;padding:5px 9px;border-radius:20px}.panel{background:#fff;border-radius:16px;padding:18px;box-shadow:0 3px 12px #0000000b}.bottom{position:fixed;bottom:0;left:0;right:0;height:68px;background:#fff;border-top:1px solid #e5e7eb;display:flex;z-index:10}.navbtn{flex:1;border:0;background:#fff;color:#667085;font-size:12px}.navbtn.active{color:#2563eb;font-weight:800}.navico{display:block;font-size:22px;margin-bottom:2px}.screen{display:none}.screen.active{display:block}.back{border:0;background:none;color:#2563eb;font-weight:700;padding:0 0 15px}
+</style>
+</head>
+<body>
+<div id="auth" class="auth"><div class="auth-card">
+  <div class="logo">EarnFast</div><div class="tag">Earn points. Get rewards.</div>
+  <div id="loginBox">
+    <input id="loginPhone" class="field" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number">
+    <input id="loginPass" class="field" type="password" placeholder="Password">
+    <button class="btn" onclick="login()">Login</button>
+    <div id="loginMsg" class="msg"></div>
+    <div class="link" onclick="showRegister()">Create New Account</div>
+  </div>
+  <div id="registerBox" class="hidden">
+    <input id="regName" class="field" placeholder="Full Name">
+    <input id="regPhone" class="field" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number">
+    <input id="regPass" class="field" type="password" placeholder="Create Password">
+    <input id="regPass2" class="field" type="password" placeholder="Confirm Password">
+    <button class="btn" onclick="sendOTP()">Send OTP</button>
+    <div id="otpArea" class="hidden"><input id="otp" class="field" inputmode="numeric" maxlength="6" placeholder="Enter OTP"><button class="btn" onclick="verifyOTP()">Verify OTP & Create Account</button></div>
+    <div id="regMsg" class="msg"></div><div class="link" onclick="showLogin()">Already have an account? Login</div>
+  </div>
+  <div id="recaptcha-container"></div>
+</div></div>
+
+<div id="app" class="hidden">
+ <header class="top"><div class="toprow"><div class="brand">EarnFast</div><div>🔔</div></div><div class="hello">Hello, <span id="userName">User</span></div><div class="balance"><span id="points">0</span> Points</div><div class="conversion">1,000 Points = ₹100</div><div class="actions"><button class="action" onclick="openScreen('wallet')">Wallet</button><button class="action" onclick="openScreen('withdraw')">Withdraw</button></div></header>
+ <main class="page">
+  <section id="home" class="screen active"><div class="section-title">Earn More</div><div class="cards">
+   <div class="feature" onclick="openScreen('tasks')"><div class="icon">📝</div><b>Daily Tasks</b><small>Complete tasks</small></div>
+   <div class="feature" onclick="openScreen('games')"><div class="icon">🎮</div><b>Game Tasks</b><small>Play & earn</small></div>
+   <div class="feature" onclick="openScreen('quiz')"><div class="icon">🧠</div><b>Quiz</b><small>Answer & earn</small></div>
+   <div class="feature" onclick="openScreen('surveys')"><div class="icon">📊</div><b>Surveys</b><small>Share opinions</small></div>
+   <div class="feature" onclick="openScreen('videos')"><div class="icon">▶️</div><b>Rewarded Video</b><small>Watch & earn</small></div>
+   <div class="feature" onclick="openScreen('referral')"><div class="icon">👥</div><b>Referral</b><small>Invite friends</small></div>
+  </div><div class="section-title" style="margin-top:20px">Quick Activity</div><div class="list"><div class="item">Today's earning <span class="pill">0 Points</span></div><div class="item">Available tasks <span class="pill">Coming soon</span></div></div></section>
+  <section id="tasks" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Daily Tasks</div><div class="panel">New tasks will appear here. Complete an available task to earn points.</div></section>
+  <section id="games" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Game Tasks</div><div class="panel">Game tasks will appear here.</div></section>
+  <section id="quiz" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Quiz</div><div class="panel">Quiz questions will appear here.</div></section>
+  <section id="surveys" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Surveys</div><div class="panel">Available surveys will appear here.</div></section>
+  <section id="videos" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Rewarded Video</div><div class="panel">Rewarded videos will appear here.</div></section>
+  <section id="referral" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Referral</div><div class="panel">Your referral code will appear here.</div></section>
+  <section id="wallet" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Wallet</div><div class="panel"><b><span id="walletPoints">0</span> Points</b><p>1,000 Points = ₹100</p><button class="btn" onclick="openScreen('withdraw')">Withdraw</button></div></section>
+  <section id="withdraw" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Withdraw</div><div class="panel"><p>Available balance: <b><span id="withdrawPoints">0</span> Points</b></p><input class="field" placeholder="UPI ID"><button class="btn" onclick="alert('Withdrawal feature will be connected after the payout backend is added.')">Submit Withdrawal Request</button></div></section>
+  <section id="more" class="screen"><div class="section-title">More</div><div class="list"><div class="item" onclick="openScreen('profile')">My Profile <span>›</span></div><div class="item" onclick="openScreen('settings')">Settings <span>›</span></div><div class="item" onclick="openScreen('history')">Transaction History <span>›</span></div><div class="item" onclick="openScreen('support')">Help & Support <span>›</span></div><div class="item" onclick="logout()">Logout <span>›</span></div></div></section>
+  <section id="profile" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">My Profile</div><div class="panel">Name: <b id="profileName">-</b><br><br>Phone: <b id="profilePhone">-</b></div></section>
+  <section id="settings" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Settings</div><div class="list"><div class="item">Notifications <span class="pill">On</span></div><div class="item">App Version <span>1.0</span></div></div></section>
+  <section id="history" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Transaction History</div><div class="panel">No transactions yet.</div></section>
+  <section id="support" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Help & Support</div><div class="panel">For help, add your support contact here.</div></section>
+ </main>
+ <nav class="bottom"><button id="navHome" class="navbtn active" onclick="openScreen('home')"><span class="navico">⌂</span>Home</button><button id="navWallet" class="navbtn" onclick="openScreen('wallet')"><span class="navico">💰</span>Wallet</button><button id="navMore" class="navbtn" onclick="openScreen('more')"><span class="navico">☰</span>More</button></nav>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyBmUmC8b4Mo5bvm5talm94b2TgsCnHxK-s",authDomain:"earnfast-9f943.firebaseapp.com",projectId:"earnfast-9f943",storageBucket:"earnfast-9f943.appspot.com",messagingSenderId:"294256759308",appId:"1:294256759308:web:5fffe8c6f85101d4da5429",measurementId:"G-WNXCPT66K4"};
+firebase.initializeApp(firebaseConfig);const auth=firebase.auth();let confirmation=null,verifier=null;
+const norm=p=>{p=(p||'').replace(/\D/g,'');return p.length===10?'+91'+p:p.startsWith('91')?'+'+p:p};
+const internalEmail=p=>norm(p).replace('+','')+'@earnfast.app';
+function showLogin(){loginBox.classList.remove('hidden');registerBox.classList.add('hidden');loginMsg.textContent=''}function showRegister(){loginBox.classList.add('hidden');registerBox.classList.remove('hidden');regMsg.textContent=''}
+function setMsg(id,t){document.getElementById(id).textContent=t}
+function makeVerifier(){if(verifier)try{verifier.clear()}catch(e){} verifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'});return verifier}
+async function sendOTP(){const name=regName.value.trim(),phone=norm(regPhone.value),p1=regPass.value,p2=regPass2.value;if(!name||phone.length<12||p1.length<6||p1!==p2){setMsg('regMsg','Name, valid phone and matching password (6+ characters) required.');return}try{confirmation=await auth.signInWithPhoneNumber(phone,makeVerifier());otpArea.classList.remove('hidden');setMsg('regMsg','OTP sent. Check your phone.')}catch(e){setMsg('regMsg',e.message)}}
+async function verifyOTP(){if(!confirmation){setMsg('regMsg','Send OTP first.');return}try{const result=await confirmation.confirm(otp.value.trim());const cred=firebase.auth.EmailAuthProvider.credential(internalEmail(regPhone.value),regPass.value);try{await result.user.linkWithCredential(cred)}catch(e){if(e.code!=='auth/provider-already-linked')throw e}await result.user.updateProfile({displayName:regName.value.trim()});await openApp(result.user)}catch(e){setMsg('regMsg',e.message)}}
+async function login(){const phone=norm(loginPhone.value),p=loginPass.value;if(phone.length<12||!p){setMsg('loginMsg','Enter phone number and password.');return}try{const u=await auth.signInWithEmailAndPassword(internalEmail(phone),p);await openApp(u.user)}catch(e){setMsg('loginMsg','Login failed. Check phone number and password.')}}
+async function openApp(u){auth.classList.add('hidden');app.classList.remove('hidden');document.getElementById('userName').textContent=u.displayName||'User';profileName.textContent=u.displayName||'User';profilePhone.textContent=u.phoneNumber||'Phone verified';openScreen('home')}
+function openScreen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));if(id==='home')navHome.classList.add('active');if(id==='wallet'||id==='withdraw')navWallet.classList.add('active');if(['more','profile','settings','history','support'].includes(id))navMore.classList.add('active');window.scrollTo(0,0)}
+function logout(){auth.signOut().then(()=>{app.classList.add('hidden');auth.classList.remove('hidden');showLogin()})}
+auth.onAuthStateChanged(u=>{if(u&&u.providerData.some(x=>x.providerId==='phone'))openApp(u)})
+</script>
+</body></html>
