@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "EarnFast",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "EarnFast",
+  "start_url": "/",
+  "theme_color": "#00a878",
+  "id": "earnfast",
+  "description": "EarnFast - Complete tasks, earn points and rewards."
+}
