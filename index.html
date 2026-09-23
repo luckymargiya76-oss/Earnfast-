@@ -19,29 +19,13 @@
 <body>
 
 <!-- 1.   -  -->
-<div id="auth-container" style="position: fixed; top:0; left:0; width:100%; height:100%; background: #f4f7f6; z-index: 9999; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
-    <div style="background: #ffffff; padding: 25px; border-radius: 15px; max-width: 350px; width: 90%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-align: center;">
-        <h2 style="color: #007BFF; margin-bottom: 5px;">EarnFast</h2>
-        <h4 id="auth-title" style="color: #555; margin-bottom: 20px;">Login / Register</h4>
-
-        <div id="register-fields" style="display:none;">
-            <input type="text" id="auth-name" placeholder="Name">
-        </div>
-        <input type="tel" id="auth-phone" placeholder="Phone Number (+91...)" inputmode="tel">
-        <input type="password" id="auth-password" placeholder="Password">
-        <input type="text" id="auth-otp" placeholder="OTP" inputmode="numeric" style="display:none;">
-
-        <button id="send-otp-btn" onclick="sendRegisterOtp()" class="btn" style="display:none;">Send OTP</button>
-        <button id="verify-register-btn" onclick="verifyRegisterOtp()" class="btn" style="display:none;">Verify OTP & Create Account</button>
-        <button id="login-btn" onclick="loginUser()" class="btn">Login</button>
-        <button id="register-btn" onclick="showRegister()" class="btn" style="background:#6c757d; margin-top:5px;">Create New Account</button>
-        <button id="forgot-btn" onclick="showForgot()" class="btn" style="background:#dc3545; margin-top:5px;">Forgot Password</button>
-        <button id="forgot-send-btn" onclick="sendForgotOtp()" class="btn" style="display:none; background:#dc3545;">Send OTP</button>
-        <button id="forgot-verify-btn" onclick="verifyForgotOtp()" class="btn" style="display:none; background:#dc3545;">Verify OTP & Set Password</button>
-        <button id="back-btn" onclick="showLogin()" class="btn" style="display:none; background:#6c757d; margin-top:5px;">Back to Login</button>
-        <div id="recaptcha-container"></div>
-        <p id="auth-message" style="color:red; font-size:13px; margin-top:10px;"></p>
-    </div>
+<div id="auth-container" style="position: fixed; top:0; left:0; width:100%; height:100%; background:#f4f7f6; z-index:9999; display:flex; justify-content:center; align-items:center; box-sizing:border-box;">
+<div style="background:#fff; padding:25px; border-radius:15px; max-width:350px; width:90%; box-shadow:0 4px 15px rgba(0,0,0,.15); text-align:center;">
+<h2 style="color:#007BFF; margin-bottom:5px;">EarnFast</h2>
+<div id="login-form"><h4 style="color:#555;">Login</h4><input type="tel" id="login-phone" placeholder="Phone Number"><input type="password" id="login-password" placeholder="Password"><button onclick="loginUser()" class="btn">Login</button><button onclick="showRegister()" class="btn" style="background:#6c757d;">Create New Account</button><button onclick="showForgot()" style="background:none;border:none;color:#007BFF;margin-top:12px;cursor:pointer;">Forgot Password?</button></div>
+<div id="register-form" style="display:none;"><h4 style="color:#555;">Create New Account</h4><input type="text" id="reg-name" placeholder="Full Name"><input type="tel" id="reg-phone" placeholder="Phone Number"><button id="reg-send" onclick="sendRegisterOtp()" class="btn">Send OTP</button><input type="text" id="reg-otp" placeholder="Enter OTP" style="display:none;"><input type="password" id="reg-pass" placeholder="Create Password" style="display:none;"><button id="reg-verify" onclick="verifyRegister()" class="btn" style="display:none;">Verify OTP & Create Account</button><button onclick="showLogin()" class="btn" style="background:#6c757d;">Back to Login</button></div>
+<div id="forgot-form" style="display:none;"><h4 style="color:#555;">Forgot Password</h4><input type="tel" id="forgot-phone" placeholder="Phone Number"><button id="forgot-send" onclick="sendForgotOtp()" class="btn">Send OTP</button><input type="text" id="forgot-otp" placeholder="Enter OTP" style="display:none;"><input type="password" id="forgot-pass" placeholder="New Password" style="display:none;"><button id="forgot-verify" onclick="verifyForgot()" class="btn" style="display:none;">Verify OTP & Change Password</button><button onclick="showLogin()" class="btn" style="background:#6c757d;">Back to Login</button></div>
+<div id="recaptcha-container"></div><p id="auth-message" style="color:red;font-size:13px;margin-top:10px;"></p></div></div>
 </div>
 
 <!-- 2.     (   ) -->
@@ -89,192 +73,24 @@
 </div>
 
 <script>
-// Firebase 
-const firebaseConfig = {
-  apiKey: "// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBmUmC8b4Mo5bvm5talm94b2JgsCnHxK-s",
-  authDomain: "earnfast-9f943.firebaseapp.com",
-  databaseURL: "https://earnfast-9f943-default-rtdb.firebaseio.com",
-  projectId: "earnfast-9f943",
-  storageBucket: "earnfast-9f943.firebasestorage.app",
-  messagingSenderId: "294256759308",
-  appId: "1:294256759308:web:5fffe8c6f85101d4da5429",
-  measurementId: "G-WNX0PF66K4"
-};,
-  authDomain: "earnfast-9f943.firebaseapp.com",
-  projectId: "earnfast-9f943",
-  storageBucket: "earnfast-9f943.appspot.com",
-  messagingSenderId: "294256759308",
-  appId: "1:294256759308:web:5fffe8c6f85101d4da5429",
-  measurementId: "G-WNXCPT66K4"
-};
+// Firebase configuration
+const firebaseConfig={apiKey:"AIzaSyBmUmC8b4Mo5bvm5talm94b2TgsCnHxK-s",authDomain:"earnfast-9f943.firebaseapp.com",projectId:"earnfast-9f943",storageBucket:"earnfast-9f943.appspot.com",messagingSenderId:"294256759308",appId:"1:294256759308:web:5fffe8c6f85101d4da5429",measurementId:"G-WNXCPT66K4"};
 firebase.initializeApp(firebaseConfig);
-
-//    
-function switchMenu(menuId) {
-    document.querySelectorAll('.menu-section').forEach(section => {
-        section.style.display = 'none';
-    });
-    document.getElementById(menuId).style.display = 'block';
-}
-
-//     
-let recaptchaVerifier = null;
-let registerConfirmation = null;
-let forgotConfirmation = null;
-let authMode = 'login';
-
-function msg(text, color='red') {
-  const el = document.getElementById('auth-message');
-  el.style.color = color;
-  el.innerText = text;
-}
-function normalizePhone(v) {
-  v = (v || '').replace(/\s|-/g,'');
-  if (/^\d{10}$/.test(v)) return '+91' + v;
-  if (/^\+91\d{10}$/.test(v)) return v;
-  return null;
-}
-function syntheticEmail(phone) {
-  return phone.replace(/\D/g,'') + '@earnfast.local';
-}
-function clearRecaptcha() {
-  if (recaptchaVerifier) { try { recaptchaVerifier.clear(); } catch(e) {} recaptchaVerifier = null; }
-  const box = document.getElementById('recaptcha-container');
-  if (box) box.innerHTML = '';
-}
-function makeRecaptcha() {
-  clearRecaptcha();
-  recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {size:'invisible'});
-  return recaptchaVerifier;
-}
-function showLogin() {
-  authMode='login'; clearRecaptcha();
-  document.getElementById('auth-title').innerText='Login';
-  document.getElementById('register-fields').style.display='none';
-  document.getElementById('auth-password').style.display='block';
-  document.getElementById('auth-otp').style.display='none';
-  document.getElementById('send-otp-btn').style.display='none';
-  document.getElementById('verify-register-btn').style.display='none';
-  document.getElementById('login-btn').style.display='block';
-  document.getElementById('register-btn').style.display='block';
-  document.getElementById('forgot-btn').style.display='block';
-  document.getElementById('forgot-send-btn').style.display='none';
-  document.getElementById('forgot-verify-btn').style.display='none';
-  document.getElementById('back-btn').style.display='none';
-  msg('');
-}
-function showRegister() {
-  authMode='register'; clearRecaptcha();
-  document.getElementById('auth-title').innerText='Create New Account';
-  document.getElementById('register-fields').style.display='block';
-  document.getElementById('auth-password').style.display='block';
-  document.getElementById('auth-otp').style.display='none';
-  document.getElementById('send-otp-btn').style.display='block';
-  document.getElementById('verify-register-btn').style.display='none';
-  document.getElementById('login-btn').style.display='none';
-  document.getElementById('register-btn').style.display='none';
-  document.getElementById('forgot-btn').style.display='none';
-  document.getElementById('forgot-send-btn').style.display='none';
-  document.getElementById('forgot-verify-btn').style.display='none';
-  document.getElementById('back-btn').style.display='block';
-  msg('');
-}
-function showForgot() {
-  authMode='forgot'; clearRecaptcha();
-  document.getElementById('auth-title').innerText='Forgot Password';
-  document.getElementById('register-fields').style.display='none';
-  document.getElementById('auth-password').style.display='block';
-  document.getElementById('auth-password').placeholder='New Password';
-  document.getElementById('auth-otp').style.display='none';
-  document.getElementById('send-otp-btn').style.display='none';
-  document.getElementById('verify-register-btn').style.display='none';
-  document.getElementById('login-btn').style.display='none';
-  document.getElementById('register-btn').style.display='none';
-  document.getElementById('forgot-btn').style.display='none';
-  document.getElementById('forgot-send-btn').style.display='block';
-  document.getElementById('forgot-verify-btn').style.display='none';
-  document.getElementById('back-btn').style.display='block';
-  msg('');
-}
-async function sendRegisterOtp() {
-  const phone=normalizePhone(document.getElementById('auth-phone').value);
-  const name=document.getElementById('auth-name').value.trim();
-  const password=document.getElementById('auth-password').value;
-  if(!name || !phone || !password || password.length<6){ msg('Name, valid phone and password (min 6 characters) required.'); return; }
-  try {
-    const verifier=makeRecaptcha();
-    registerConfirmation=await firebase.auth().signInWithPhoneNumber(phone, verifier);
-    document.getElementById('auth-otp').style.display='block';
-    document.getElementById('send-otp-btn').style.display='none';
-    document.getElementById('verify-register-btn').style.display='block';
-    msg('OTP sent. Enter the SMS OTP.', 'green');
-  } catch(e) { clearRecaptcha(); msg(e.message); }
-}
-async function verifyRegisterOtp() {
-  const otp=document.getElementById('auth-otp').value.trim();
-  const phone=normalizePhone(document.getElementById('auth-phone').value);
-  const password=document.getElementById('auth-password').value;
-  const name=document.getElementById('auth-name').value.trim();
-  if(!registerConfirmation || !/^\d{6}$/.test(otp)){ msg('Enter the 6-digit OTP.'); return; }
-  try {
-    const result=await registerConfirmation.confirm(otp);
-    const user=result.user;
-    const cred=firebase.auth.EmailAuthProvider.credential(syntheticEmail(phone), password);
-    await user.linkWithCredential(cred);
-    await user.updateProfile({displayName:name});
-    await firebase.auth().signOut();
-    registerConfirmation=null; clearRecaptcha();
-    showLogin();
-    msg('Account created. Now login with phone + password.', 'green');
-  } catch(e) { msg(e.message); }
-}
-async function loginUser() {
-  const phone=normalizePhone(document.getElementById('auth-phone').value);
-  const password=document.getElementById('auth-password').value;
-  if(!phone || !password){ msg('Enter phone number and password.'); return; }
-  try { await firebase.auth().signInWithEmailAndPassword(syntheticEmail(phone),password); loginSuccess(); }
-  catch(e){ msg(e.message); }
-}
-async function sendForgotOtp() {
-  const phone=normalizePhone(document.getElementById('auth-phone').value);
-  if(!phone){ msg('Enter a valid 10-digit Indian phone number.'); return; }
-  try {
-    const verifier=makeRecaptcha();
-    forgotConfirmation=await firebase.auth().signInWithPhoneNumber(phone,verifier);
-    document.getElementById('auth-otp').style.display='block';
-    document.getElementById('forgot-send-btn').style.display='none';
-    document.getElementById('forgot-verify-btn').style.display='block';
-    msg('OTP sent. Enter the SMS OTP and new password.', 'green');
-  } catch(e){ clearRecaptcha(); msg(e.message); }
-}
-async function verifyForgotOtp() {
-  const otp=document.getElementById('auth-otp').value.trim();
-  const phone=normalizePhone(document.getElementById('auth-phone').value);
-  const password=document.getElementById('auth-password').value;
-  if(!forgotConfirmation || !/^\d{6}$/.test(otp) || password.length<6){ msg('Enter OTP and a new password (min 6 characters).'); return; }
-  try {
-    const result=await forgotConfirmation.confirm(otp);
-    const user=result.user;
-    try {
-      await user.updatePassword(password);
-    } catch(e) {
-      if(e.code==='auth/requires-recent-login' || e.code==='auth/provider-already-linked') throw e;
-      const cred=firebase.auth.EmailAuthProvider.credential(syntheticEmail(phone),password);
-      await user.linkWithCredential(cred);
-    }
-    await firebase.auth().signOut();
-    forgotConfirmation=null; clearRecaptcha(); showLogin();
-    msg('Password changed. Login with phone + new password.', 'green');
-  } catch(e){ msg(e.message); }
-}
-function loginSuccess() {
-    clearRecaptcha();
-    document.getElementById('auth-container').style.display='none';
-    document.getElementById('main-app').style.display='block';
-    switchMenu('home-menu-page');
-}
+let regConfirmation=null,forgotConfirmation=null,recaptchaVerifier=null;
+function cleanRecaptcha(){if(recaptchaVerifier){try{recaptchaVerifier.clear()}catch(e){} recaptchaVerifier=null} const x=document.getElementById('recaptcha-container'); if(x)x.innerHTML='';}
+function getRecaptcha(){cleanRecaptcha(); recaptchaVerifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'}); return recaptchaVerifier;}
+function phone(v){v=v.trim().replace(/\s+/g,'');return /^\d{10}$/.test(v)?'+91'+v:v;}
+function ident(v){return phone(v).replace('+','')+'@earnfast.local';}
+function showLogin(){cleanRecaptcha();document.getElementById('login-form').style.display='block';document.getElementById('register-form').style.display='none';document.getElementById('forgot-form').style.display='none';document.getElementById('auth-message').innerText='';}
+function showRegister(){cleanRecaptcha();document.getElementById('login-form').style.display='none';document.getElementById('register-form').style.display='block';document.getElementById('forgot-form').style.display='none';document.getElementById('auth-message').innerText='';}
+function showForgot(){cleanRecaptcha();document.getElementById('login-form').style.display='none';document.getElementById('register-form').style.display='none';document.getElementById('forgot-form').style.display='block';document.getElementById('auth-message').innerText='';}
+function sendRegisterOtp(){const n=document.getElementById('reg-name').value.trim(),p=phone(document.getElementById('reg-phone').value),m=document.getElementById('auth-message');if(!n||!/^\+91\d{10}$/.test(p)){m.innerText='Enter name and valid 10-digit Indian phone number.';return}m.innerText='Sending OTP...';firebase.auth().signInWithPhoneNumber(p,getRecaptcha()).then(r=>{regConfirmation=r;document.getElementById('reg-send').style.display='none';document.getElementById('reg-otp').style.display='block';document.getElementById('reg-pass').style.display='block';document.getElementById('reg-verify').style.display='block';m.style.color='green';m.innerText='OTP sent to your phone.'}).catch(e=>{cleanRecaptcha();m.style.color='red';m.innerText=e.message;});}
+function verifyRegister(){const n=document.getElementById('reg-name').value.trim(),p=phone(document.getElementById('reg-phone').value),o=document.getElementById('reg-otp').value.trim(),pw=document.getElementById('reg-pass').value,m=document.getElementById('auth-message');if(!regConfirmation||!o||pw.length<6){m.innerText='Enter OTP and password (6+ characters).';return}m.innerText='Creating account...';regConfirmation.confirm(o).then(async c=>{await c.user.linkWithCredential(firebase.auth.EmailAuthProvider.credential(ident(p),pw));await c.user.updateProfile({displayName:n});await firebase.auth().signOut();m.style.color='green';m.innerText='Account created. Please login.';regConfirmation=null;setTimeout(showLogin,1200)}).catch(e=>{m.style.color='red';m.innerText=e.message});}
+function loginUser(){const p=phone(document.getElementById('login-phone').value),pw=document.getElementById('login-password').value,m=document.getElementById('auth-message');if(!/^\+91\d{10}$/.test(p)||!pw){m.innerText='Enter phone number and password.';return}m.innerText='Logging in...';firebase.auth().signInWithEmailAndPassword(ident(p),pw).then(loginSuccess).catch(e=>m.innerText=e.message);}
+function sendForgotOtp(){const p=phone(document.getElementById('forgot-phone').value),m=document.getElementById('auth-message');if(!/^\+91\d{10}$/.test(p)){m.innerText='Enter valid 10-digit Indian phone number.';return}m.innerText='Sending OTP...';firebase.auth().signInWithPhoneNumber(p,getRecaptcha()).then(r=>{forgotConfirmation=r;document.getElementById('forgot-send').style.display='none';document.getElementById('forgot-otp').style.display='block';document.getElementById('forgot-pass').style.display='block';document.getElementById('forgot-verify').style.display='block';m.style.color='green';m.innerText='OTP sent to your phone.'}).catch(e=>{cleanRecaptcha();m.style.color='red';m.innerText=e.message;});}
+function verifyForgot(){const p=phone(document.getElementById('forgot-phone').value),o=document.getElementById('forgot-otp').value.trim(),pw=document.getElementById('forgot-pass').value,m=document.getElementById('auth-message');if(!forgotConfirmation||!o||pw.length<6){m.innerText='Enter OTP and new password (6+ characters).';return}forgotConfirmation.confirm(o).then(async c=>{try{await c.user.linkWithCredential(firebase.auth.EmailAuthProvider.credential(ident(p),pw))}catch(e){if(e.code==='auth/provider-already-linked'||e.code==='auth/credential-already-in-use')await c.user.updatePassword(pw);else throw e}await firebase.auth().signOut();m.style.color='green';m.innerText='Password changed. Please login.';forgotConfirmation=null;setTimeout(showLogin,1200)}).catch(e=>{m.style.color='red';m.innerText=e.message});}
+function switchMenu(menuId){document.querySelectorAll('.menu-section').forEach(x=>x.style.display='none');document.getElementById(menuId).style.display='block';}
+function loginSuccess(){document.getElementById('auth-container').style.display='none';document.getElementById('main-app').style.display='block';switchMenu('home-menu-page');}
 </script>
 </body>
 </html>
