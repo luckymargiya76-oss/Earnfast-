@@ -312,8 +312,8 @@
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
 let registrationComplete=false;
 const firebaseConfig = {
   apiKey: "AIzaSyBmUmC8b4Mo5bvm5talm94b2JgsCnHxK-s",
@@ -423,23 +423,20 @@ async function openApp(u){
   const navHome=document.getElementById('navHome');
   if(navHome) navHome.classList.add('active');
 
-  try{
-    const snapshot=await db.ref('users/'+u.uid+'/points').once('value');
-    const points=Number(snapshot.val())||0;
+  try{    const snapshot = await db.ref('users/' + u.uid + '/points').once('value');
+    const points = Number(snapshot.val()) || 0;
 
-    const p=document.getElementById('points');
-    const wp=document.getElementById('walletPoints');
-    const wdp=document.getElementById('withdrawPoints');
+    document.getElementById('points').textContent = points;
+    document.getElementById('walletPoints').textContent = points;
+    document.getElementById('withdrawPoints').textContent = points;
 
-    if(p) p.textContent=points;
-    if(wp) wp.textContent=points;
-    if(wdp) wdp.textContent=points;
   }catch(error){
-    console.log('Points load error:',error);
+    console.log('Points load error:', error);
   }
 
   window.scrollTo(0,0);
 }
+    
 function openScreen(id){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
 
