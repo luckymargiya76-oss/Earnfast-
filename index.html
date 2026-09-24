@@ -131,7 +131,31 @@ function showRegister(){clearVerifier();loginBox.classList.add('hidden');registe
 function showForgot(){clearVerifier();loginBox.classList.add('hidden');registerBox.classList.add('hidden');forgotBox.classList.remove('hidden');forgotMsg.textContent=''}
 function setMsg(id,t){document.getElementById(id).textContent=t}
 function makeVerifier(){if(verifier)try{verifier.clear()}catch(e){} verifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'});return verifier}
-async function login(){const phone=norm(loginPhone.value),p=loginPass.value;if(phone.length<12||!p){setMsg('loginMsg','Enter phone number and password.');return}try{const u=await auth.signInWithEmailAndPassword(internalEmail(phone),p);await openApp(u.user)}catch(e){setMsg('loginMsg','Login failed. Check phone number and password.')}}
+async function login(){
+  const phone=norm(loginPhone.value);
+  const p=loginPass.value;
+
+  if(phone.length<12||!p){
+    setMsg('loginMsg','Enter phone number and password.');
+    return;
+  }
+
+  try{
+    const email=internalEmail(phone);
+    const u=await auth.signInWithEmailAndPassword(email,p);
+    await openApp(u.user);
+  }catch(e){
+    if(e.code==='auth/invalid-credential'){
+      setMsg('loginMsg','Phone number or password is incorrect.');
+    }else if(e.code==='auth/user-not-found'){
+      setMsg('loginMsg','Account not found.');
+    }else if(e.code==='auth/wrong-password'){
+      setMsg('loginMsg','Password is incorrect.');
+    }else{
+      setMsg('loginMsg','Login error: '+e.message);
+    }
+  }
+}
 async function openApp(u){auth.classList.add('hidden');app.classList.remove('hidden');document.getElementById('userName').textContent=u.displayName||'User';profileName.textContent=u.displayName||'User';profilePhone.textContent=u.phoneNumber||'Phone verified';openScreen('home')}
 function openScreen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));if(id==='home')navHome.classList.add('active');if(id==='wallet'||id==='withdraw')navWallet.classList.add('active');if(['more','profile','settings','history','support'].includes(id))navMore.classList.add('active');window.scrollTo(0,0)}
 async function sendForgotOTP(){const phone=norm(forgotPhone.value);if(phone.length<12){setMsg('forgotMsg','Enter a valid 10-digit phone number.');return}try{confirmation=await auth.signInWithPhoneNumber(phone,makeVerifier());forgotOtpArea.classList.remove('hidden');setMsg('forgotMsg','OTP sent. Check your phone.')}catch(e){setMsg('forgotMsg',e.message)}}
