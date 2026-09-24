@@ -156,7 +156,34 @@ async function login(){
     }
   }
 }
-async function openApp(u){auth.classList.add('hidden');app.classList.remove('hidden');document.getElementById('userName').textContent=u.displayName||'User';profileName.textContent=u.displayName||'User';profilePhone.textContent=u.phoneNumber||'Phone verified';openScreen('home')}
+async function openApp(u){
+  document.getElementById('auth').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+
+  document.getElementById('userName').textContent=u.displayName||'User';
+  document.getElementById('profileName').textContent=u.displayName||'User';
+  document.getElementById('profilePhone').textContent=u.phoneNumber||'Phone verified';
+
+  document.querySelectorAll('.screen').forEach(x=>{
+    x.classList.remove('active');
+  });
+
+  const home=document.getElementById('home');
+  if(home){
+    home.classList.add('active');
+  }
+
+  document.querySelectorAll('.navbtn').forEach(x=>{
+    x.classList.remove('active');
+  });
+
+  const navHome=document.getElementById('navHome');
+  if(navHome){
+    navHome.classList.add('active');
+  }
+
+  window.scrollTo(0,0);
+}
 function openScreen(id){
   document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
 
