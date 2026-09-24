@@ -301,7 +301,39 @@
   </div>
 </section>
   <section id="wallet" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Wallet</div><div class="panel"><b><span id="walletPoints">0</span> Points</b><p>1,000 Points = ₹100</p><button class="btn" onclick="openScreen('withdraw')">Withdraw</button></div></section>
-  <section id="withdraw" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Withdraw</div><div class="panel"><p>Available balance: <b><span id="withdrawPoints">0</span> Points</b></p><input class="field" placeholder="UPI ID"><button class="btn" onclick="alert('Withdrawal feature will be connected after the payout backend is added.')">Submit Withdrawal Request</button></div></section>
+<section id="withdraw" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Withdraw</div>
+
+  <div class="panel">
+    <p>
+      Available balance:
+      <b><span id="withdrawPoints">0</span> Points</b>
+    </p>
+
+    <input
+      id="withdrawUpi"
+      class="field"
+      placeholder="UPI ID"
+      type="text"
+    >
+
+    <input
+      id="withdrawAmount"
+      class="field"
+      placeholder="Points to withdraw"
+      type="number"
+      min="1000"
+    >
+
+    <button class="btn" onclick="submitWithdrawal()">
+      Submit Withdrawal Request
+    </button>
+
+    <p id="withdrawMsg"></p>
+  </div>
+</section>
   <section id="more" class="screen"><div class="section-title">More</div><div class="list"><div class="item" onclick="openScreen('profile')">My Profile <span>›</span></div><div class="item" onclick="openScreen('settings')">Settings <span>›</span></div><div class="item" onclick="openScreen('history')">Transaction History <span>›</span></div><div class="item" onclick="openScreen('support')">Help & Support <span>›</span></div><div class="item" onclick="logout()">Logout <span>›</span></div></div></section>
   <section id="profile" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">My Profile</div><div class="panel">Name: <b id="profileName">-</b><br><br>Phone: <b id="profilePhone">-</b></div></section>
   <section id="settings" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Settings</div><div class="list"><div class="item">Notifications <span class="pill">On</span></div><div class="item">App Version <span>1.0</span></div></div></section>
@@ -460,6 +492,62 @@ function openScreen(id){
   window.scrollTo(0,0);
 }
 async function completeTask(element, pointsEarned){
+async function submitWithdrawal(){
+  const user = firebase.auth().currentUser;
+
+  if(!user){
+    alert('Please login first.');
+    return;
+  }
+
+  const upi = document.getElementById('withdrawUpi').value.trim();
+  const amount = Number(document.getElementById('withdrawAmount').value);
+  const msg = document.getElementById('withdrawMsg');
+
+  if(!upi){
+    msg.textContent = 'UPI ID डालो.';
+    return;
+  }
+
+  if(!amount || amount < 1000){
+    msg.textContent = 'Minimum 1,000 Points required.';
+    return;
+  }
+
+  try{
+    const pointsRef = db.ref('users/' + user.uid + '/points');
+    const snapshot = await pointsRef.once('value');
+    const currentPoints = Number(snapshot.val()) || 0;
+
+    if(amount > currentPoints){
+      msg.textContent = 'इतने Points आपके पास नहीं हैं.';
+      return;
+    }
+
+    const requestRef = db.ref('withdrawalRequests').push();
+
+    await requestRef.set({
+      userId: user.uid,
+      upi: upi,
+      points: amount,
+      status: 'pending',
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    await pointsRef.set(currentPoints - amount);
+
+    document.getElementById('points').textContent = currentPoints - amount;
+    document.getElementById('walletPoints').textContent = currentPoints - amount;
+    document.getElementById('withdrawPoints').textContent = currentPoints - amount;
+
+    msg.textContent = 'Withdrawal request submitted successfully.';
+    document.getElementById('withdrawUpi').value = '';
+    document.getElementById('withdrawAmount').value = '';
+
+  }catch(error){
+    msg.textContent = 'Request failed: ' + error.message;
+  }
+}
   const user = firebase.auth().currentUser;
 
   if(!user){
