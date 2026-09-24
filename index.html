@@ -157,7 +157,28 @@ async function login(){
   }
 }
 async function openApp(u){auth.classList.add('hidden');app.classList.remove('hidden');document.getElementById('userName').textContent=u.displayName||'User';profileName.textContent=u.displayName||'User';profilePhone.textContent=u.phoneNumber||'Phone verified';openScreen('home')}
-function openScreen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));if(id==='home')navHome.classList.add('active');if(id==='wallet'||id==='withdraw')navWallet.classList.add('active');if(['more','profile','settings','history','support'].includes(id))navMore.classList.add('active');window.scrollTo(0,0)}
+function openScreen(id){
+  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
+
+  const screen=document.getElementById(id);
+  if(screen) screen.classList.add('active');
+
+  document.querySelectorAll('.navbtn').forEach(x=>x.classList.remove('active'));
+
+  if(id==='home'){
+    document.getElementById('navHome').classList.add('active');
+  }
+
+  if(id==='wallet'||id==='withdraw'){
+    document.getElementById('navWallet').classList.add('active');
+  }
+
+  if(['more','profile','settings','history','support'].includes(id)){
+    document.getElementById('navMore').classList.add('active');
+  }
+
+  window.scrollTo(0,0);
+}
 async function sendForgotOTP(){const phone=norm(forgotPhone.value);if(phone.length<12){setMsg('forgotMsg','Enter a valid 10-digit phone number.');return}try{confirmation=await auth.signInWithPhoneNumber(phone,makeVerifier());forgotOtpArea.classList.remove('hidden');setMsg('forgotMsg','OTP sent. Check your phone.')}catch(e){setMsg('forgotMsg',e.message)}}
 async function changePassword(){const phone=norm(forgotPhone.value),p1=newPass.value,p2=newPass2.value;if(!confirmation){setMsg('forgotMsg','Send OTP first.');return}if(p1.length<6||p1!==p2){setMsg('forgotMsg','Passwords must match and be at least 6 characters.');return}try{registrationComplete=true;const result=await confirmation.confirm(forgotOtp.value.trim());const email=internalEmail(phone);try{await result.user.updatePassword(p1)}catch(e){if(e.code==='auth/requires-recent-login'){const cred=firebase.auth.EmailAuthProvider.credential(email,p1);try{await result.user.linkWithCredential(cred)}catch(x){if(x.code!=='auth/provider-already-linked')throw x}}else if(e.code==='auth/user-not-found'){const cred=firebase.auth.EmailAuthProvider.credential(email,p1);await result.user.linkWithCredential(cred)}else throw e}await auth.signOut();registrationComplete=false;setMsg('forgotMsg','Password changed successfully. You can now login.');showLogin()}catch(e){registrationComplete=false;setMsg('forgotMsg',e.message)}}
 function logout(){auth.signOut().then(()=>{app.classList.add('hidden');auth.classList.remove('hidden');showLogin()})}
