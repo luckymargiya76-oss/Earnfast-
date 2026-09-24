@@ -430,9 +430,65 @@ async function login(){
       setMsg('loginMsg','Password is incorrect.');
     }else{
       setMsg('loginMsg','Login error: '+e.message);
-    }
-  }
+        }
 }
+
+async function submitWithdrawal(){
+  const user = firebase.auth().currentUser;
+
+  if(!user){
+    alert('Please login first.');
+    return;
+  }
+
+  const upi = document.getElementById('withdrawUpi').value.trim();
+  const amount = Number(document.getElementById('withdrawAmount').value);
+  const msg = document.getElementById('withdrawMsg');
+
+  if(!upi){
+    msg.textContent = 'UPI ID डालो.';
+    return;
+  }
+
+  if(amount < 1000){
+    msg.textContent = 'Minimum 1,000 Points required.';
+    return;
+  }
+
+  try{
+    const pointsRef = db.ref('users/' + user.uid + '/points');
+    const snapshot = await pointsRef.once('value');
+    const currentPoints = Number(snapshot.val()) || 0;
+
+    if(amount > currentPoints){
+      msg.textContent = 'इतने Points आपके पास नहीं हैं.';
+      return;
+    }
+
+    const requestRef = db.ref('withdrawalRequests').push();
+
+    await requestRef.set({
+      userId: user.uid,
+      upi: upi,
+      points: amount,
+      status: 'pending',
+      createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    await pointsRef.set(currentPoints - amount);
+
+    document.getElementById('points').textContent = currentPoints - amount;
+    document.getElementById('walletPoints').textContent = currentPoints - amount;
+    document.getElementById('withdrawPoints').textContent = currentPoints - amount;
+
+    msg.textContent = 'Withdrawal request submitted successfully.';
+
+    document.getElementById('withdrawUpi').value = '';
+    document.getElementById('withdrawAmount').value = '';
+
+  }catch(error){
+    msg.textContent = 'Request failed: ' + error.message;
+  }
 async function openApp(u){
   document.getElementById('auth').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
