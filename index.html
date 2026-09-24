@@ -51,12 +51,255 @@
    <div class="feature" onclick="openScreen('videos')"><div class="icon">▶️</div><b>Rewarded Video</b><small>Watch & earn</small></div>
    <div class="feature" onclick="openScreen('referral')"><div class="icon">👥</div><b>Referral</b><small>Invite friends</small></div>
   </div><div class="section-title" style="margin-top:20px">Quick Activity</div><div class="list"><div class="item">Today's earning <span class="pill">0 Points</span></div><div class="item">Available tasks <span class="pill">Coming soon</span></div></div></section>
-  <section id="tasks" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Daily Tasks</div><div class="panel">New tasks will appear here. Complete an available task to earn points.</div></section>
-  <section id="games" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Game Tasks</div><div class="panel">Game tasks will appear here.</div></section>
-  <section id="quiz" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Quiz</div><div class="panel">Quiz questions will appear here.</div></section>
-  <section id="surveys" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Surveys</div><div class="panel">Available surveys will appear here.</div></section>
-  <section id="videos" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Rewarded Video</div><div class="panel">Rewarded videos will appear here.</div></section>
-  <section id="referral" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Referral</div><div class="panel">Your referral code will appear here.</div></section>
+<section id="tasks" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Daily Tasks</div>
+
+  <div class="cards">
+
+    <div class="feature" onclick="completeTask(this,20)">
+      <div class="icon">🌐</div>
+      <b>Visit Website</b>
+      <small>Complete task • +20 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,30)">
+      <div class="icon">📖</div>
+      <b>Read Article</b>
+      <small>Complete task • +30 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,50)">
+      <div class="icon">📱</div>
+      <b>App Activity</b>
+      <small>Complete task • +50 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,40)">
+      <div class="icon">🔎</div>
+      <b>Search Task</b>
+      <small>Complete task • +40 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,75)">
+      <div class="icon">📝</div>
+      <b>Simple Task</b>
+      <small>Complete task • +75 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">⭐</div>
+      <b>Special Task</b>
+      <small>Complete task • +100 Points</small>
+    </div>
+
+  </div>
+</section>
+<section id="games" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Game Tasks</div>
+
+  <div class="cards">
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">🎮</div>
+      <b>Game Level 1</b>
+      <small>Complete game • +100 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,150)">
+      <div class="icon">🕹️</div>
+      <b>Game Challenge</b>
+      <small>Complete challenge • +150 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,200)">
+      <div class="icon">🏆</div>
+      <b>Win a Match</b>
+      <small>Complete match • +200 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,250)">
+      <div class="icon">⚡</div>
+      <b>Speed Challenge</b>
+      <small>Complete challenge • +250 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,300)">
+      <div class="icon">🏅</div>
+      <b>Hard Challenge</b>
+      <small>Complete task • +300 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,500)">
+      <div class="icon">👑</div>
+      <b>Expert Challenge</b>
+      <small>Complete task • +500 Points</small>
+    </div>
+
+  </div>
+</section>
+<section id="quiz" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Quiz</div>
+
+  <div class="cards">
+
+    <div class="feature" onclick="completeTask(this,50)">
+      <div class="icon">🧠</div>
+      <b>General Knowledge</b>
+      <small>Complete quiz • +50 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,75)">
+      <div class="icon">📚</div>
+      <b>Education Quiz</b>
+      <small>Complete quiz • +75 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">🌎</div>
+      <b>World Quiz</b>
+      <small>Complete quiz • +100 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,125)">
+      <div class="icon">🔬</div>
+      <b>Science Quiz</b>
+      <small>Complete quiz • +125 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,150)">
+      <div class="icon">🏏</div>
+      <b>Sports Quiz</b>
+      <small>Complete quiz • +150 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,200)">
+      <div class="icon">🏆</div>
+      <b>Expert Quiz</b>
+      <small>Complete quiz • +200 Points</small>
+    </div>
+
+  </div>
+</section>
+ <section id="surveys" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Surveys</div>
+
+  <div class="cards">
+
+    <div class="feature" onclick="completeTask(this,50)">
+      <div class="icon">📝</div>
+      <b>Quick Survey</b>
+      <small>Complete survey • +50 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,75)">
+      <div class="icon">📋</div>
+      <b>Opinion Survey</b>
+      <small>Share your opinion • +75 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">⭐</div>
+      <b>Product Survey</b>
+      <small>Complete survey • +100 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,125)">
+      <div class="icon">🛒</div>
+      <b>Shopping Survey</b>
+      <small>Complete survey • +125 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,150)">
+      <div class="icon">📱</div>
+      <b>Mobile Survey</b>
+      <small>Complete survey • +150 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,200)">
+      <div class="icon">🏆</div>
+      <b>Premium Survey</b>
+      <small>Complete survey • +200 Points</small>
+    </div>
+
+  </div>
+</section>
+ <section id="videos" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Rewarded Video</div>
+
+  <div class="cards">
+
+    <div class="feature" onclick="completeTask(this,25)">
+      <div class="icon">▶️</div>
+      <b>Watch Short Video</b>
+      <small>Watch video • +25 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,50)">
+      <div class="icon">🎬</div>
+      <b>Watch Video</b>
+      <small>Complete video • +50 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,75)">
+      <div class="icon">📺</div>
+      <b>Video Challenge</b>
+      <small>Complete challenge • +75 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">⭐</div>
+      <b>Premium Video</b>
+      <small>Watch video • +100 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,150)">
+      <div class="icon">🏆</div>
+      <b>Bonus Video</b>
+      <small>Watch video • +150 Points</small>
+    </div>
+
+    <div class="feature" onclick="completeTask(this,200)">
+      <div class="icon">👑</div>
+      <b>Expert Video</b>
+      <small>Complete video • +200 Points</small>
+    </div>
+
+  </div>
+</section>
+ <section id="referral" class="screen">
+  <button class="back" onclick="openScreen('home')">← Home</button>
+
+  <div class="section-title">Referral</div>
+
+  <div class="panel">
+    <h3>Invite Friends</h3>
+    <p>Apna referral code share karke points earn karo.</p>
+
+    <div class="feature">
+      <div class="icon">🎁</div>
+      <b>Your Referral Code</b>
+      <small id="refCode">EARNFAST100</small>
+    </div>
+
+    <br>
+
+    <div class="feature" onclick="completeTask(this,100)">
+      <div class="icon">👥</div>
+      <b>Referral Bonus</b>
+      <small>Invite a friend • +100 Points</small>
+    </div>
+  </div>
+</section>
   <section id="wallet" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Wallet</div><div class="panel"><b><span id="walletPoints">0</span> Points</b><p>1,000 Points = ₹100</p><button class="btn" onclick="openScreen('withdraw')">Withdraw</button></div></section>
   <section id="withdraw" class="screen"><button class="back" onclick="openScreen('home')">← Home</button><div class="section-title">Withdraw</div><div class="panel"><p>Available balance: <b><span id="withdrawPoints">0</span> Points</b></p><input class="field" placeholder="UPI ID"><button class="btn" onclick="alert('Withdrawal feature will be connected after the payout backend is added.')">Submit Withdrawal Request</button></div></section>
   <section id="more" class="screen"><div class="section-title">More</div><div class="list"><div class="item" onclick="openScreen('profile')">My Profile <span>›</span></div><div class="item" onclick="openScreen('settings')">Settings <span>›</span></div><div class="item" onclick="openScreen('history')">Transaction History <span>›</span></div><div class="item" onclick="openScreen('support')">Help & Support <span>›</span></div><div class="item" onclick="logout()">Logout <span>›</span></div></div></section>
@@ -82,6 +325,7 @@ const firebaseConfig = {
   measurementId: "G-WNX0PF66K4"
 };
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth();let confirmation=null,verifier=null;
+const db = firebase.database();
 const norm=p=>{p=(p||'').replace(/\D/g,'');return p.length===10?'+91'+p:p.startsWith('91')?'+'+p:p};
 const internalEmail=p=>norm(p).replace('+','')+'@earnfast.app';
 async function register(){
@@ -169,17 +413,28 @@ async function openApp(u){
   });
 
   const home=document.getElementById('home');
-  if(home){
-    home.classList.add('active');
-  }
+  if(home) home.classList.add('active');
 
   document.querySelectorAll('.navbtn').forEach(x=>{
     x.classList.remove('active');
   });
 
   const navHome=document.getElementById('navHome');
-  if(navHome){
-    navHome.classList.add('active');
+  if(navHome) navHome.classList.add('active');
+
+  try{
+    const snapshot=await db.ref('users/'+u.uid+'/points').once('value');
+    const points=Number(snapshot.val())||0;
+
+    const p=document.getElementById('points');
+    const wp=document.getElementById('walletPoints');
+    const wdp=document.getElementById('withdrawPoints');
+
+    if(p) p.textContent=points;
+    if(wp) wp.textContent=points;
+    if(wdp) wdp.textContent=points;
+  }catch(error){
+    console.log('Points load error:',error);
   }
 
   window.scrollTo(0,0);
@@ -206,6 +461,36 @@ function openScreen(id){
 
   window.scrollTo(0,0);
 }
+async function completeTask(element, pointsEarned){
+  const user = firebase.auth().currentUser;
+
+  if(!user){
+    alert('Please login first.');
+    return;
+  }
+
+  try{
+    const ref = db.ref('users/' + user.uid + '/points');
+
+    const snapshot = await ref.once('value');
+    const currentPoints = Number(snapshot.val()) || 0;
+    const newPoints = currentPoints + pointsEarned;
+
+    await ref.set(newPoints);
+
+    document.getElementById('points').textContent = newPoints;
+    document.getElementById('walletPoints').textContent = newPoints;
+    document.getElementById('withdrawPoints').textContent = newPoints;
+
+    element.style.opacity = '0.6';
+    element.onclick = null;
+
+    alert('Task completed! +' + pointsEarned + ' Points');
+  }catch(error){
+    alert('Points save nahi ho paye: ' + error.message);
+  }
+}
+
 async function sendForgotOTP(){const phone=norm(forgotPhone.value);if(phone.length<12){setMsg('forgotMsg','Enter a valid 10-digit phone number.');return}try{confirmation=await auth.signInWithPhoneNumber(phone,makeVerifier());forgotOtpArea.classList.remove('hidden');setMsg('forgotMsg','OTP sent. Check your phone.')}catch(e){setMsg('forgotMsg',e.message)}}
 async function changePassword(){const phone=norm(forgotPhone.value),p1=newPass.value,p2=newPass2.value;if(!confirmation){setMsg('forgotMsg','Send OTP first.');return}if(p1.length<6||p1!==p2){setMsg('forgotMsg','Passwords must match and be at least 6 characters.');return}try{registrationComplete=true;const result=await confirmation.confirm(forgotOtp.value.trim());const email=internalEmail(phone);try{await result.user.updatePassword(p1)}catch(e){if(e.code==='auth/requires-recent-login'){const cred=firebase.auth.EmailAuthProvider.credential(email,p1);try{await result.user.linkWithCredential(cred)}catch(x){if(x.code!=='auth/provider-already-linked')throw x}}else if(e.code==='auth/user-not-found'){const cred=firebase.auth.EmailAuthProvider.credential(email,p1);await result.user.linkWithCredential(cred)}else throw e}await auth.signOut();registrationComplete=false;setMsg('forgotMsg','Password changed successfully. You can now login.');showLogin()}catch(e){registrationComplete=false;setMsg('forgotMsg',e.message)}}
 function logout(){auth.signOut().then(()=>{app.classList.add('hidden');auth.classList.remove('hidden');showLogin()})}
