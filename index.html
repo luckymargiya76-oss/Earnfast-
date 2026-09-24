@@ -106,12 +106,12 @@ async function register(){
   }
 
   try{
-    registrationComplete=true;
-    const email=internalEmail(phone);
+  registrationComplete=true;
+  const email=internalEmail(phone);
 
-    catch(e){setMsg('loginMsg',e.code+' : '+e.message)}
+  const result=await auth.createUserWithEmailAndPassword(email,p1);
 
-    await result.user.updateProfile({
+  await result.user.updateProfile({
       displayName:name
     });
 
