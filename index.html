@@ -14,33 +14,7 @@
 </style>
 </head>
 <body>
-<div id="auth" class="auth"><div class="auth-card">
-  <div class="logo">EarnFast</div><div class="tag">Earn points. Get rewards.</div>
-  <div id="loginBox">
-    <input id="loginPhone" class="field" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number">
-    <input id="loginPass" class="field" type="password" placeholder="Password">
-    <button class="btn" onclick="login()">Login</button>
-    <div id="loginMsg" class="msg"></div>
-    <div class="link" onclick="showRegister()">Create New Account</div><div class="link" onclick="showForgot()">Forgot Password?</div>
-  </div>
-  <div id="registerBox" class="hidden">
-    <input id="regName" class="field" placeholder="Full Name">
-    <input id="regPhone" class="field" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number">
-    <input id="regPass" class="field" type="password" placeholder="Create Password">
-    <input id="regPass2" class="field" type="password" placeholder="Confirm Password">
-   <button class="btn" onclick="register()">Create Account</button>
-    <div id="regMsg" class="msg"></div><div class="link" onclick="showLogin()">Already have an account? Login</div>
-  </div>
-  <div id="forgotBox" class="hidden">
-    <input id="forgotPhone" class="field" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone Number">
-    <button class="btn" onclick="sendForgotOTP()">Send OTP</button>
-    <div id="forgotOtpArea" class="hidden"><input id="forgotOtp" class="field" inputmode="numeric" maxlength="6" placeholder="Enter OTP"><input id="newPass" class="field" type="password" placeholder="New Password"><input id="newPass2" class="field" type="password" placeholder="Confirm New Password"><button class="btn" onclick="changePassword()">Verify OTP & Change Password</button></div>
-    <div id="forgotMsg" class="msg"></div><div class="link" onclick="showLogin()">Back to Login</div>
-  </div>
-  <div id="recaptcha-container"></div>
-</div></div>
 
-<div id="app" class="hidden">
  <header class="top"><div class="toprow"><div class="brand">EarnFast</div><div>🔔</div></div><div class="hello">Hello, <span id="userName">User</span></div><div class="balance"><span id="points">0</span> Points</div><div class="conversion">1,000 Points = ₹100</div><div class="actions"><button class="action" onclick="openScreen('wallet')">Wallet</button><button class="action" onclick="openScreen('withdraw')">Withdraw</button></div></header>
  <main class="page">
   <section id="home" class="screen active"><div class="section-title">Earn More</div><div class="cards">
@@ -334,7 +308,7 @@
     <p id="withdrawMsg"></p>
   </div>
 </section>
-  <section id="more" class="screen"><div class="section-title">More</div><div class="list"><div class="item" onclick="openScreen('profile')">My Profile <span>›</span></div><div class="item" onclick="openScreen('settings')">Settings <span>›</span></div><div class="item" onclick="openScreen('history')">Transaction History <span>›</span></div><div class="item" onclick="openScreen('support')">Help & Support <span>›</span></div><div class="item" onclick="logout()">Logout <span>›</span></div></div></section>
+  bhi class="screen"><div class="section-title">More</div><div class="list"><div class="item" onclick="openScreen('profile')">My Profile <span>›</span></div><div class="item" onclick="openScreen('settings')">Settings <span>›</span></div><div class="item" onclick="openScreen('history')">Transaction History <span>›</span></div><div class="item" onclick="openScreen('support')">Help & Support <span>›</span></div><div class="item" onclick="logout()">Logout <span>›</span></div></div></section>
   <section id="profile" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">My Profile</div><div class="panel">Name: <b id="profileName">-</b><br><br>Phone: <b id="profilePhone">-</b></div></section>
   <section id="settings" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Settings</div><div class="list"><div class="item">Notifications <span class="pill">On</span></div><div class="item">App Version <span>1.0</span></div></div></section>
   <section id="history" class="screen"><button class="back" onclick="openScreen('more')">← More</button><div class="section-title">Transaction History</div><div class="panel">No transactions yet.</div></section>
@@ -346,92 +320,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-let registrationComplete=false;
-const firebaseConfig = {
-  apiKey: "AIzaSyBmUmC8b4Mo5bvm5talm94b2JgsCnHxK-s",
-  authDomain: "earnfast-9f943.firebaseapp.com",
-  databaseURL: "https://earnfast-9f943-default-rtdb.firebaseio.com",
-  projectId: "earnfast-9f943",
-  storageBucket: "earnfast-9f943.firebasestorage.app",
-  messagingSenderId: "294256759308",
-  appId: "1:294256759308:web:5fffe8c6f85101d4da5429",
-  measurementId: "G-WNX0PF66K4"
-};
-firebase.initializeApp(firebaseConfig);const auth=firebase.auth();let confirmation=null,verifier=null;
-const db = firebase.database();
-const norm=p=>{p=(p||'').replace(/\D/g,'');return p.length===10?'+91'+p:p.startsWith('91')?'+'+p:p};
-const internalEmail=p=>norm(p).replace('+','')+'@earnfast.app';
-async function register(){
-  const name=regName.value.trim();
-  const phone=norm(regPhone.value);
-  const p1=regPass.value;
-  const p2=regPass2.value;
 
-  if(!name||phone.length<12){
-    setMsg('regMsg','Name और valid phone number डालो.');
-    return;
-  }
-
-  if(p1.length<6){
-    setMsg('regMsg','Password कम से कम 6 characters का होना चाहिए.');
-    return;
-  }
-
-  if(p1!==p2){
-    setMsg('regMsg','दोनों passwords same होने चाहिए.');
-    return;
-  }
-
-  try{
-  registrationComplete=true;
-  const email=internalEmail(phone);
-
-  const result=await auth.createUserWithEmailAndPassword(email,p1);
-
-  await result.user.updateProfile({
-      displayName:name
-    });
-
-    await auth.signOut();
-    registrationComplete=false;
-
-    setMsg('regMsg','Registration successful. अब Login करो.');
-    showLogin();
-  }catch(e){
-    registrationComplete=false;
-    setMsg('regMsg',e.message);
-  }
-}
 function clearVerifier(){if(verifier){try{verifier.clear()}catch(e){} verifier=null} const c=document.getElementById('recaptcha-container');if(c)c.innerHTML=''}
 function showLogin(){clearVerifier();loginBox.classList.remove('hidden');registerBox.classList.add('hidden');forgotBox.classList.add('hidden');loginMsg.textContent=''}
 function showRegister(){clearVerifier();loginBox.classList.add('hidden');registerBox.classList.remove('hidden');forgotBox.classList.add('hidden');regMsg.textContent=''}
 function showForgot(){clearVerifier();loginBox.classList.add('hidden');registerBox.classList.add('hidden');forgotBox.classList.remove('hidden');forgotMsg.textContent=''}
 function setMsg(id,t){document.getElementById(id).textContent=t}
 function makeVerifier(){if(verifier)try{verifier.clear()}catch(e){} verifier=new firebase.auth.RecaptchaVerifier('recaptcha-container',{size:'invisible'});return verifier}
-async function login(){
-  const phone=norm(loginPhone.value);
-  const p=loginPass.value;
-
-  if(phone.length<12||!p){
-    setMsg('loginMsg','Enter phone number and password.');
-    return;
-  }
-
-  try{
-    const email=internalEmail(phone);
-    const u=await auth.signInWithEmailAndPassword(email,p);
-    await openApp(u.user);
-  }catch(e){
-    if(e.code==='auth/invalid-credential'){
-      setMsg('loginMsg','Phone number or password is incorrect.');
-    }else if(e.code==='auth/user-not-found'){
-      setMsg('loginMsg','Account not found.');
-    }else if(e.code==='auth/wrong-password'){
-      setMsg('loginMsg','Password is incorrect.');
-    }else{
-      setMsg('loginMsg','Login error: '+e.message);
-        }
-}
 
 async function submitWithdrawal(){
   const user = firebase.auth().currentUser;
