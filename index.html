@@ -489,6 +489,7 @@ async function submitWithdrawal(){
   }catch(error){
     msg.textContent = 'Request failed: ' + error.message;
   }
+}
 async function openApp(u){
   document.getElementById('auth').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
