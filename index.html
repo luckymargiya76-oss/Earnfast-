@@ -51,30 +51,30 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
     <h2>EarnFast Dashboard</h2>
     <p>Your Reward Balance</p>
     <div class="balance"><span id="points">0</span> Points</div>
-    <div>₹<span id="rupees">0.00</span></div>
-    <div class="limit">Daily earning limit: ₹2,000 • 10 points = ₹1</div>
+    <div><span id="rupees">0.00</span></div>
+    <div class="limit">Daily earning limit: 2,000 � 10 points = 1</div>
   </div>
 
   <div class="card">
     <h3>Earn Today</h3>
     <div class="grid">
-      <button class="feature" onclick="show('games')"><span>🎮</span>Games</button>
-      <button class="feature" onclick="show('tasks')"><span>🎯</span>Tasks</button>
-      <button class="feature" onclick="show('videos')"><span>🎬</span>Videos</button>
-      <button class="feature" onclick="dailyBonus()"><span>🎁</span>Daily Bonus</button>
+      <button class="feature" onclick="show('games')"><span></span>Games</button>
+      <button class="feature" onclick="show('tasks')"><span></span>Tasks</button>
+      <button class="feature" onclick="show('videos')"><span></span>Videos</button>
+      <button class="feature" onclick="dailyBonus()"><span></span>Daily Bonus</button>
     </div>
   </div>
 
   <div class="card">
     <h3>Quick Actions</h3>
-    <button class="btn green" onclick="show('wallet')">💰 Open Wallet</button>
-    <button class="btn" onclick="show('withdraw')">💸 Withdraw</button>
+    <button class="btn green" onclick="show('wallet')"> Open Wallet</button>
+    <button class="btn" onclick="show('withdraw')"> Withdraw</button>
     <p class="small">Rewards shown here are demo/front-end rewards until a verified backend and real revenue source are connected.</p>
   </div>
 </section>
 
 <section id="games" class="menu-section">
-  <div class="hero"><h2>🎮 Games</h2><p>Complete a game challenge to earn points.</p></div>
+  <div class="hero"><h2> Games</h2><p>Complete a game challenge to earn points.</p></div>
   <div class="card">
     <h3>Quick Quiz</h3><p>Answer correctly to receive a small reward.</p>
     <button class="btn green" onclick="quiz()">Start Quiz</button>
@@ -86,14 +86,14 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 </section>
 
 <section id="tasks" class="menu-section">
-  <div class="hero"><h2>🎯 Tasks</h2><p>Available reward tasks</p></div>
+  <div class="hero"><h2> Tasks</h2><p>Available reward tasks</p></div>
   <div class="card"><h3>Daily Check Task</h3><p>Complete the in-app check task.</p><button class="btn green" onclick="reward(20,'Daily Task')">Complete</button></div>
   <div class="card"><h3>Knowledge Task</h3><p>Answer a short question.</p><button class="btn" onclick="reward(30,'Knowledge Task')">Complete</button></div>
   <div class="card"><span class="badge">Admin controlled</span><p class="small">Real sponsored tasks should be added only after a verified task/revenue provider is connected.</p></div>
 </section>
 
 <section id="videos" class="menu-section">
-  <div class="hero"><h2>🎬 Videos</h2><p>Reward videos</p></div>
+  <div class="hero"><h2> Videos</h2><p>Reward videos</p></div>
   <div class="card">
     <h3>Watch & Earn</h3>
     <p>In the real version, the backend/ad provider should verify watch completion before crediting points.</p>
@@ -102,34 +102,34 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 </section>
 
 <section id="wallet" class="menu-section">
-  <div class="hero"><h2>💰 Wallet</h2><p>Available reward balance</p><div class="balance">₹<span id="walletRupees">0.00</span></div></div>
+  <div class="hero"><h2> Wallet</h2><p>Available reward balance</p><div class="balance"><span id="walletRupees">0.00</span></div></div>
   <div class="card">
     <div class="item"><span>Points</span><b id="walletPoints">0</b></div>
-    <div class="item"><span>Conversion</span><b>1,000 = ₹100</b></div>
-    <div class="item"><span>Daily limit</span><b>₹2,000</b></div>
+    <div class="item"><span>Conversion</span><b>1,000 = 100</b></div>
+    <div class="item"><span>Daily limit</span><b>2,000</b></div>
     <button class="btn" onclick="show('history')">View History</button>
   </div>
 </section>
 
 <section id="withdraw" class="menu-section">
-  <div class="hero"><h2>💸 Withdrawal</h2><p>Request a withdrawal</p></div>
+  <div class="hero"><h2> Withdrawal</h2><p>Request a withdrawal</p></div>
   <div class="card">
     <label>UPI ID</label><input id="upi" placeholder="example@upi">
-    <label>Amount (₹)</label><input id="amount" type="number" min="1" placeholder="100">
+    <label>Amount ()</label><input id="amount" type="number" min="1" placeholder="100">
     <button class="btn green" onclick="withdraw()">Submit Withdrawal</button>
     <p id="withdrawMsg" class="small"></p>
   </div>
 </section>
 
 <section id="history" class="menu-section">
-  <div class="hero"><h2>📜 History</h2><p>Recent reward activity</p></div>
+  <div class="hero"><h2> History</h2><p>Recent reward activity</p></div>
   <div class="card" id="historyList"><p class="small">No activity yet.</p></div>
 </section>
 
 <section id="profile" class="menu-section">
-  <div class="hero"><h2>👤 Profile</h2><p>EarnFast account</p></div>
+  <div class="hero"><h2> Profile</h2><p>EarnFast account</p></div>
   <div class="card">
-    <div class="item"><span>Email</span><b id="profileEmail">—</b></div>
+    <div class="item"><span>Email</span><b id="profileEmail">�</b></div>
     <div class="item"><span>Referral Code</span><b id="refCode">EF-DEMO</b></div>
     <button class="btn gray" onclick="logoutUser()">Logout</button>
   </div>
@@ -138,19 +138,19 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 <section id="more" class="menu-section">
   <div class="hero" style="background:#007BFF"><h2>More Options</h2><p>App settings & information</p></div>
   <div class="card">
-    <div class="item" onclick="show('profile')">My Profile <span>›</span></div>
-    <div class="item" onclick="show('history')">Transaction History <span>›</span></div>
-    <div class="item"><span>Conversion</span><b>1,000 points = ₹100</b></div>
-    <div class="item"><span>Daily limit</span><b>₹2,000</b></div>
+    <div class="item" onclick="show('profile')">My Profile <span>�</span></div>
+    <div class="item" onclick="show('history')">Transaction History <span>�</span></div>
+    <div class="item"><span>Conversion</span><b>1,000 points = 100</b></div>
+    <div class="item"><span>Daily limit</span><b>2,000</b></div>
   </div>
 </section>
 
 <div class="bottom">
-  <div class="nav" onclick="show('home')"><b>🏠</b>Home</div>
-  <div class="nav" onclick="show('games')"><b>🎮</b>Games</div>
-  <div class="nav" onclick="show('tasks')"><b>🎯</b>Tasks</div>
-  <div class="nav" onclick="show('wallet')"><b>💰</b>Wallet</div>
-  <div class="nav" onclick="show('more')"><b>☰</b>More</div>
+  <div class="nav" onclick="show('home')"><b></b>Home</div>
+  <div class="nav" onclick="show('games')"><b></b>Games</div>
+  <div class="nav" onclick="show('tasks')"><b></b>Tasks</div>
+  <div class="nav" onclick="show('wallet')"><b></b>Wallet</div>
+  <div class="nav" onclick="show('more')"><b></b>More</div>
 </div>
 </div>
 
@@ -189,9 +189,9 @@ function show(id){
 }
 function reward(p, name){
   resetIfNewDay();
-  const remaining = 20000 - todayEarned; // 20,000 points = ₹2,000
+  const remaining = 20000 - todayEarned; // 20,000 points = 2,000
   const give = Math.max(0, Math.min(Number(p), remaining));
-  if(!give){ alert('Aaj ki ₹2,000 daily earning limit complete ho gayi hai.'); return; }
+  if(!give){ alert('Aaj ki 2,000 daily earning limit complete ho gayi hai.'); return; }
   points += give; todayEarned += give;
   history.unshift({name:name, points:give, time:new Date().toLocaleString()});
   history=history.slice(0,50);
@@ -210,7 +210,7 @@ function withdraw(){
   const upi=document.getElementById('upi').value.trim(), amount=Number(document.getElementById('amount').value);
   const msg=document.getElementById('withdrawMsg');
   if(!upi || !amount){msg.textContent='UPI ID aur amount enter karo.';return;}
-  if(amount < 100){msg.textContent='Minimum demo withdrawal ₹100 rakha gaya hai.';return;}
+  if(amount < 100){msg.textContent='Minimum demo withdrawal 100 rakha gaya hai.';return;}
   if(amount*10 > points){msg.textContent='Wallet balance insufficient.';return;}
   msg.textContent='Withdrawal request recorded locally. Real UPI payout ke liye secure backend/payment provider integration zaroori hai.';
 }
