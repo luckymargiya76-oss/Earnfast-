@@ -1,104 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EarnFast</title>
-    <!-- Firebase core SDKs -->
-    <script src="https://gstatic.com">
-const EF_RATE_POINTS=1000, EF_RATE_RUPEES=100, EF_DAILY_LIMIT=2000;
-function efGet(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
-function efSet(k,v){localStorage.setItem(k,JSON.stringify(v))}
-function efPoints(){return Number(localStorage.getItem('earnfast_points')||0)}
-function efSetPoints(v){localStorage.setItem('earnfast_points',String(Math.max(0,Math.floor(v))))}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function refreshWallet(){let p=efPoints(),e=document.getElementById('wallet-points');if(e)e.textContent=p.toLocaleString()+' Points = ₹'+((p/1000)*100).toFixed(2);renderRequests()}
-function submitWithdrawal(){let p=Number(document.getElementById('withdraw-points').value),u=document.getElementById('withdraw-upi').value.trim(),m=document.getElementById('withdraw-message');if(!Number.isFinite(p)||p<1000||p%1000!==0){m.style.color='red';m.textContent='Minimum 1,000 points; use 1,000-point steps.';return}if(p>20000){m.style.color='red';m.textContent='Daily withdrawal limit is ₹2,000.';return}if(!/^[^\s@]+@[^\s@]+$/.test(u)){m.style.color='red';m.textContent='Please enter a valid UPI ID.';return}if(p>efPoints()){m.style.color='red';m.textContent='Insufficient points.';return}let a=efGet('earnfast_withdrawals',[]),r={id:'EF-'+Date.now(),points:p,amount:p/10,upi:u,status:'Pending',createdAt:new Date().toLocaleString()};a.unshift(r);efSet('earnfast_withdrawals',a);efSetPoints(efPoints()-p);m.style.color='green';m.textContent='Withdrawal request submitted. Status: Pending.';document.getElementById('withdraw-points').value='';refreshWallet();renderAdmin()}
-function renderRequests(){let b=document.getElementById('withdraw-history');if(!b)return;let a=efGet('earnfast_withdrawals',[]);b.innerHTML=a.length?a.map(r=>'<div style="padding:10px 0;border-bottom:1px solid #eee"><b>₹'+Number(r.amount).toFixed(2)+'</b> — '+esc(r.status)+'<br><small>UPI: '+esc(r.upi)+'<br>'+esc(r.createdAt)+'<br>'+esc(r.id)+'</small></div>').join(''):'No withdrawal requests yet.'}
-function renderAdmin(){let b=document.getElementById('admin-withdrawals');if(!b)return;let a=efGet('earnfast_withdrawals',[]);b.innerHTML=a.length?a.map(r=>'<div style="padding:12px 0;border-bottom:1px solid #ddd"><b>'+esc(r.id)+'</b><br>₹'+Number(r.amount).toFixed(2)+' | '+esc(r.upi)+' | <b>'+esc(r.status)+'</b><br><small>'+esc(r.createdAt)+'</small>'+(r.status==='Pending'?'<br><button class="btn" onclick="markPaid(\''+r.id+'\')">Mark Paid</button><button class="btn" style="background:#dc3545" onclick="cancelReq(\''+r.id+'\')">Cancel</button>':'')+'</div>').join(''):'No requests yet.'}
-function markPaid(id){let a=efGet('earnfast_withdrawals',[]),r=a.find(x=>x.id===id);if(r){r.status='Paid (Manual)';efSet('earnfast_withdrawals',a);renderRequests();renderAdmin()}}
-function cancelReq(id){let a=efGet('earnfast_withdrawals',[]),r=a.find(x=>x.id===id);if(r&&r.status==='Pending'){r.status='Cancelled';efSet('earnfast_withdrawals',a);efSetPoints(efPoints()+Number(r.points));refreshWallet();renderAdmin()}}
-const originalSwitchMenu=switchMenu;switchMenu=function(id){originalSwitchMenu(id);if(id==='wallet-menu-page')refreshWallet();if(id==='admin-menu-page')renderAdmin()};
-if(localStorage.getItem('earnfast_points')===null)efSetPoints(2500);refreshWallet();renderAdmin();
-</script>
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
-    <style>
-        body { margin: 0; font-family: sans-serif; background: #f4f7f6; padding-bottom: 60px; }
-        .hero { background: #00A86B; color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
-        .card { background: white; margin: 15px; padding: 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .btn { display: block; background: #007BFF; color: white; text-align: center; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 10px; border: none; width: 100%; box-sizing: border-box; cursor: pointer; }
-        .menu-section { display: none; }
-        input { width: 90%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EarnFast</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f7f6;padding-bottom:75px;color:#222}
+.hero{background:#00A86B;color:#fff;padding:22px 18px;border-radius:0 0 22px 22px}
+.hero h2{margin:0 0 5px} .hero p{margin:5px 0}
+.balance{font-size:28px;font-weight:700;margin:12px 0 4px}
+.limit{font-size:13px;opacity:.95}
+.card{background:#fff;margin:14px;border-radius:14px;padding:16px;box-shadow:0 2px 9px rgba(0,0,0,.08)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.feature{border:0;border-radius:12px;padding:17px 8px;background:#f7faf9;font-weight:700;cursor:pointer}
+.feature span{display:block;font-size:25px;margin-bottom:7px}
+.btn{display:block;width:100%;border:0;background:#007BFF;color:#fff;padding:12px;border-radius:9px;font-weight:700;cursor:pointer;margin-top:9px}
+.btn.green{background:#00A86B} .btn.gray{background:#6c757d}
+.menu-section{display:none}
+.menu-section.active{display:block}
+.item{padding:13px 0;border-bottom:1px solid #eee;display:flex;justify-content:space-between}
+input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-radius:8px}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:9px 0;box-shadow:0 -2px 10px rgba(0,0,0,.1);z-index:99}
+.nav{text-align:center;font-size:12px;cursor:pointer}
+.nav b{display:block;font-size:21px;margin-bottom:2px}
+.small{font-size:12px;color:#666}
+.badge{display:inline-block;background:#e9f8f2;color:#00885b;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+</style>
 </head>
 <body>
 
-<!-- 1.   -  -->
-<div id="auth-container" style="position: fixed; top:0; left:0; width:100%; height:100%; background: #f4f7f6; z-index: 9999; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">
-    <div style="background: #ffffff; padding: 25px; border-radius: 15px; max-width: 350px; width: 90%; box-shadow: 0 4px 15px rgba(0,0,0,0.15); text-align: center;">
-        <h2 style="color: #007BFF; margin-bottom: 5px;">EarnFast</h2>
-        <h4 style="color: #555; margin-bottom: 20px;">  / - </h4>
-        <input type="email" id="auth-email" placeholder="   (Email)">
-        <input type="password" id="auth-password" placeholder="  (Password)">
-        <button onclick="loginUser()" class="btn"> Login ( )</button>
-        <button onclick="registerUser()" class="btn" style="background: #6c757d; margin-top: 5px;"> Register (  )</button>
-        <p id="auth-message" style="color: red; font-size: 13px; margin-top: 10px;"></p>
-    </div>
+<div id="auth-container" style="position:fixed;inset:0;background:#f4f7f6;z-index:9999;display:flex;align-items:center;justify-content:center">
+  <div class="card" style="max-width:360px;width:92%;text-align:center">
+    <h2 style="color:#007BFF">EarnFast</h2>
+    <p>Login / Register</p>
+    <input type="email" id="auth-email" placeholder="Email">
+    <input type="password" id="auth-password" placeholder="Password">
+    <button onclick="loginUser()" class="btn">Login</button>
+    <button onclick="registerUser()" class="btn gray">Register</button>
+    <p id="auth-message" class="small"></p>
+  </div>
 </div>
 
-<!-- 2.     (   ) -->
-<div id="main-app" style="display: none;">
-    
-    <!-- HOME MENU PAGE -->
-    <div id="home-menu-page" class="menu-section" style="display: block;">
-        <div class="hero">
-            <h2>EarnFast Dashboard</h2>
-            <p>Your Reward Balance</p>
-            <h3>2,500 Points = 250</h3>
-        </div>
-        <div class="card">
-            <h3>Daily Tasks</h3>
-            <p>Complete simple tasks and earn daily points.</p>
-            <button class="btn" onclick="alert('Task Loading...')">Start Task</button>
-        </div>
+<div id="main-app" style="display:none">
+
+<section id="home" class="menu-section active">
+  <div class="hero">
+    <h2>EarnFast Dashboard</h2>
+    <p>Your Reward Balance</p>
+    <div class="balance"><span id="points">0</span> Points</div>
+    <div>₹<span id="rupees">0.00</span></div>
+    <div class="limit">Daily earning limit: ₹2,000 • 10 points = ₹1</div>
+  </div>
+
+  <div class="card">
+    <h3>Earn Today</h3>
+    <div class="grid">
+      <button class="feature" onclick="show('games')"><span>🎮</span>Games</button>
+      <button class="feature" onclick="show('tasks')"><span>🎯</span>Tasks</button>
+      <button class="feature" onclick="show('videos')"><span>🎬</span>Videos</button>
+      <button class="feature" onclick="dailyBonus()"><span>🎁</span>Daily Bonus</button>
     </div>
+  </div>
 
-    <!-- MORE MENU PAGE -->
-    <div id="more-menu-page" class="menu-section">
-        <div class="hero" style="background: #007BFF;">
-            <h2>More Options</h2>
-            <p>App Settings & Info</p>
-        </div>
-        <div class="card">
-            <h3>Download Official App</h3>
-            <p>Stay updated with our latest offers.</p>
-            <button class="btn" style="background: #00A86B;">Download APK</button>
-        </div>
-    </div>
+  <div class="card">
+    <h3>Quick Actions</h3>
+    <button class="btn green" onclick="show('wallet')">💰 Open Wallet</button>
+    <button class="btn" onclick="show('withdraw')">💸 Withdraw</button>
+    <p class="small">Rewards shown here are demo/front-end rewards until a verified backend and real revenue source are connected.</p>
+  </div>
+</section>
 
-    <!--      -->
-    
-<div id="wallet-menu-page" class="menu-section"><div class="hero"><h2>Wallet</h2><p>Your EarnFast Balance</p><h3 id="wallet-points">0 Points = ₹0</h3></div><div class="card"><h3>Withdraw</h3><p>1,000 Points = ₹100 • Daily limit ₹2,000</p><input id="withdraw-points" type="number" min="1000" step="1000" placeholder="Points to withdraw"><input id="withdraw-upi" type="text" placeholder="Your UPI ID (example@upi)"><button class="btn" onclick="submitWithdrawal()">Submit Withdrawal Request</button><p id="withdraw-message"></p></div><div class="card"><h3>My Withdrawal Requests</h3><div id="withdraw-history">No withdrawal requests yet.</div></div></div>
-<div id="admin-menu-page" class="menu-section"><div class="hero" style="background:#6f42c1;"><h2>Admin</h2><p>Withdrawal Requests</p></div><div class="card"><p><b>Demo admin panel:</b> requests are stored on this device only. Real multi-user/admin security requires a backend.</p><div id="admin-withdrawals">No requests yet.</div></div></div>
+<section id="games" class="menu-section">
+  <div class="hero"><h2>🎮 Games</h2><p>Complete a game challenge to earn points.</p></div>
+  <div class="card">
+    <h3>Quick Quiz</h3><p>Answer correctly to receive a small reward.</p>
+    <button class="btn green" onclick="quiz()">Start Quiz</button>
+  </div>
+  <div class="card">
+    <h3>Daily Challenge</h3><p>One challenge per day.</p>
+    <button class="btn" onclick="reward(25,'Daily Challenge')">Complete Challenge</button>
+  </div>
+</section>
 
-<div style="position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 999;">
-        <div onclick="switchMenu('home-menu-page')" style="text-align: center; cursor: pointer; color: #007BFF;">
-            <div style="font-size: 20px;"></div>
-            <div style="font-size: 12px; font-weight: bold;">Home</div>
-        </div>
-        <div onclick="switchMenu('more-menu-page')" style="text-align: center; cursor: pointer; color: #555;">
-            <div style="font-size: 20px;"></div>
-            <div style="font-size: 12px; font-weight: bold;">More</div>
-        </div>
-    <div onclick="switchMenu('wallet-menu-page')" style="text-align:center;cursor:pointer;color:#28a745;"><div style="font-size:20px;">₹</div><div style="font-size:12px;font-weight:bold;">Wallet</div></div>
-    <div onclick="switchMenu('admin-menu-page')" style="text-align:center;cursor:pointer;color:#6f42c1;"><div style="font-size:20px;">⚙</div><div style="font-size:12px;font-weight:bold;">Admin</div></div>
-    </div>
+<section id="tasks" class="menu-section">
+  <div class="hero"><h2>🎯 Tasks</h2><p>Available reward tasks</p></div>
+  <div class="card"><h3>Daily Check Task</h3><p>Complete the in-app check task.</p><button class="btn green" onclick="reward(20,'Daily Task')">Complete</button></div>
+  <div class="card"><h3>Knowledge Task</h3><p>Answer a short question.</p><button class="btn" onclick="reward(30,'Knowledge Task')">Complete</button></div>
+  <div class="card"><span class="badge">Admin controlled</span><p class="small">Real sponsored tasks should be added only after a verified task/revenue provider is connected.</p></div>
+</section>
 
+<section id="videos" class="menu-section">
+  <div class="hero"><h2>🎬 Videos</h2><p>Reward videos</p></div>
+  <div class="card">
+    <h3>Watch & Earn</h3>
+    <p>In the real version, the backend/ad provider should verify watch completion before crediting points.</p>
+    <button class="btn green" onclick="reward(10,'Video Reward')">Demo: Video Complete</button>
+  </div>
+</section>
+
+<section id="wallet" class="menu-section">
+  <div class="hero"><h2>💰 Wallet</h2><p>Available reward balance</p><div class="balance">₹<span id="walletRupees">0.00</span></div></div>
+  <div class="card">
+    <div class="item"><span>Points</span><b id="walletPoints">0</b></div>
+    <div class="item"><span>Conversion</span><b>1,000 = ₹100</b></div>
+    <div class="item"><span>Daily limit</span><b>₹2,000</b></div>
+    <button class="btn" onclick="show('history')">View History</button>
+  </div>
+</section>
+
+<section id="withdraw" class="menu-section">
+  <div class="hero"><h2>💸 Withdrawal</h2><p>Request a withdrawal</p></div>
+  <div class="card">
+    <label>UPI ID</label><input id="upi" placeholder="example@upi">
+    <label>Amount (₹)</label><input id="amount" type="number" min="1" placeholder="100">
+    <button class="btn green" onclick="withdraw()">Submit Withdrawal</button>
+    <p id="withdrawMsg" class="small"></p>
+  </div>
+</section>
+
+<section id="history" class="menu-section">
+  <div class="hero"><h2>📜 History</h2><p>Recent reward activity</p></div>
+  <div class="card" id="historyList"><p class="small">No activity yet.</p></div>
+</section>
+
+<section id="profile" class="menu-section">
+  <div class="hero"><h2>👤 Profile</h2><p>EarnFast account</p></div>
+  <div class="card">
+    <div class="item"><span>Email</span><b id="profileEmail">—</b></div>
+    <div class="item"><span>Referral Code</span><b id="refCode">EF-DEMO</b></div>
+    <button class="btn gray" onclick="logoutUser()">Logout</button>
+  </div>
+</section>
+
+<section id="more" class="menu-section">
+  <div class="hero" style="background:#007BFF"><h2>More Options</h2><p>App settings & information</p></div>
+  <div class="card">
+    <div class="item" onclick="show('profile')">My Profile <span>›</span></div>
+    <div class="item" onclick="show('history')">Transaction History <span>›</span></div>
+    <div class="item"><span>Conversion</span><b>1,000 points = ₹100</b></div>
+    <div class="item"><span>Daily limit</span><b>₹2,000</b></div>
+  </div>
+</section>
+
+<div class="bottom">
+  <div class="nav" onclick="show('home')"><b>🏠</b>Home</div>
+  <div class="nav" onclick="show('games')"><b>🎮</b>Games</div>
+  <div class="nav" onclick="show('tasks')"><b>🎯</b>Tasks</div>
+  <div class="nav" onclick="show('wallet')"><b>💰</b>Wallet</div>
+  <div class="nav" onclick="show('more')"><b>☰</b>More</div>
+</div>
 </div>
 
 <script>
-// Firebase 
 const firebaseConfig = {
   apiKey: "AIzaSyBmUmC8b4Mo5bvm5talm94b2TgsCnHxK-s",
   authDomain: "earnfast-9f943.firebaseapp.com",
@@ -108,50 +164,91 @@ const firebaseConfig = {
   appId: "1:294256759308:web:5fffe8c6f85101d4da5429",
   measurementId: "G-WNXCPT66K4"
 };
+
 firebase.initializeApp(firebaseConfig);
 
-//    
-function switchMenu(menuId) {
-    document.querySelectorAll('.menu-section').forEach(section => {
-        section.style.display = 'none';
-    });
-    document.getElementById(menuId).style.display = 'block';
-}
+let points = Number(localStorage.getItem('earnfast_points') || 0);
+let todayEarned = Number(localStorage.getItem('earnfast_today') || 0);
+let lastDay = localStorage.getItem('earnfast_day') || new Date().toDateString();
+let history = JSON.parse(localStorage.getItem('earnfast_history') || '[]');
 
-//     
-function registerUser() {
-    const email = document.getElementById('auth-email').value;
-    const password = document.getElementById('auth-password').value;
-    const msg = document.getElementById('auth-message');
-    if(!email || !password) { msg.innerText = "     !"; return; }
-    
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(() => {
-        msg.style.color = "green";
-        msg.innerText = "  !    ...";
-        setTimeout(() => { loginSuccess(); }, 1500);
-    })
-    .catch((error) => { msg.innerText = error.message; });
+function resetIfNewDay(){
+  const d = new Date().toDateString();
+  if(d !== lastDay){ todayEarned=0; lastDay=d; localStorage.setItem('earnfast_today','0'); localStorage.setItem('earnfast_day',d); }
 }
-
-//    
-function loginUser() {
-    const email = document.getElementById('auth-email').value;
-    const password = document.getElementById('auth-password').value;
-    const msg = document.getElementById('auth-message');
-    if(!email || !password) { msg.innerText = "    !"; return; }
-    
-    firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => { loginSuccess(); })
-    .catch((error) => { msg.innerText = error.message; });
+function sync(){
+  resetIfNewDay();
+  document.querySelectorAll('#points,#walletPoints').forEach(x=>x.textContent=points.toLocaleString());
+  document.querySelectorAll('#rupees,#walletRupees').forEach(x=>x.textContent=(points/10).toFixed(2));
+  renderHistory();
 }
-
-//    
-function loginSuccess() {
-    document.getElementById('auth-container').style.display = 'none';
-    document.getElementById('main-app').style.display = 'block';
-    switchMenu('home-menu-page');
+function show(id){
+  document.querySelectorAll('.menu-section').forEach(x=>x.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  sync();
 }
+function reward(p, name){
+  resetIfNewDay();
+  const remaining = 20000 - todayEarned; // 20,000 points = ₹2,000
+  const give = Math.max(0, Math.min(Number(p), remaining));
+  if(!give){ alert('Aaj ki ₹2,000 daily earning limit complete ho gayi hai.'); return; }
+  points += give; todayEarned += give;
+  history.unshift({name:name, points:give, time:new Date().toLocaleString()});
+  history=history.slice(0,50);
+  localStorage.setItem('earnfast_points',points);
+  localStorage.setItem('earnfast_today',todayEarned);
+  localStorage.setItem('earnfast_history',JSON.stringify(history));
+  sync(); alert('+'+give+' points added!');
+}
+function dailyBonus(){ reward(50,'Daily Bonus'); }
+function quiz(){ if(confirm('Quiz demo: correct answer submit karna hai?')) reward(40,'Quiz Reward'); }
+function renderHistory(){
+  const el=document.getElementById('historyList'); if(!el) return;
+  el.innerHTML=history.length ? history.map(h=>`<div class="item"><span>${h.name}<br><small>${h.time}</small></span><b>+${h.points}</b></div>`).join('') : '<p class="small">No activity yet.</p>';
+}
+function withdraw(){
+  const upi=document.getElementById('upi').value.trim(), amount=Number(document.getElementById('amount').value);
+  const msg=document.getElementById('withdrawMsg');
+  if(!upi || !amount){msg.textContent='UPI ID aur amount enter karo.';return;}
+  if(amount < 100){msg.textContent='Minimum demo withdrawal ₹100 rakha gaya hai.';return;}
+  if(amount*10 > points){msg.textContent='Wallet balance insufficient.';return;}
+  msg.textContent='Withdrawal request recorded locally. Real UPI payout ke liye secure backend/payment provider integration zaroori hai.';
+}
+function authError(e){
+  const map={
+    'auth/invalid-credential':'Email ya password galat hai.',
+    'auth/wrong-password':'Password galat hai.',
+    'auth/user-not-found':'Is email se account nahi mila. Pehle Register karo.',
+    'auth/email-already-in-use':'Ye email pehle se registered hai. Login karo.',
+    'auth/weak-password':'Password kam se kam 6 characters ka rakho.',
+    'auth/operation-not-allowed':'Firebase Console me Email/Password sign-in enable nahi hai.',
+    'auth/unauthorized-domain':'Is website domain ko Firebase Authentication me authorize karo.',
+    'auth/network-request-failed':'Internet connection check karo.'
+  };
+  document.getElementById('auth-message').textContent=map[e.code] || ('Login error: '+(e.message||e.code||'Unknown error'));
+}
+function registerUser(){
+  const email=document.getElementById('auth-email').value.trim(), password=document.getElementById('auth-password').value;
+  const msg=document.getElementById('auth-message');
+  if(!email||!password){msg.textContent='Email aur password enter karo.';return;}
+  firebase.auth().createUserWithEmailAndPassword(email,password).then(loginSuccess).catch(authError);
+}
+function loginUser(){
+  const email=document.getElementById('auth-email').value.trim(), password=document.getElementById('auth-password').value;
+  const msg=document.getElementById('auth-message');
+  if(!email||!password){msg.textContent='Email aur password enter karo.';return;}
+  msg.textContent='Login ho raha hai...';
+  firebase.auth().signInWithEmailAndPassword(email,password).then(loginSuccess).catch(authError);
+}
+function loginSuccess(){
+  document.getElementById('auth-container').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  const email=(typeof firebase!=='undefined' && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser.email : (localStorage.getItem('earnfast_email') || 'User');
+  document.getElementById('profileEmail').textContent=email;
+  sync();
+}
+function logoutUser(){ location.reload(); }
+sync();
 </script>
 </body>
 </html>
