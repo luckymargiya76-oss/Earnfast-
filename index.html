@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EarnFast</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#f4f7f6;padding-bottom:75px;color:#222}
@@ -32,19 +30,7 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 </head>
 <body>
 
-<div id="auth-container" style="position:fixed;inset:0;background:#f4f7f6;z-index:9999;display:flex;align-items:center;justify-content:center">
-  <div class="card" style="max-width:360px;width:92%;text-align:center">
-    <h2 style="color:#007BFF">EarnFast</h2>
-    <p>Login / Register</p>
-    <input type="email" id="auth-email" placeholder="Email">
-    <input type="password" id="auth-password" placeholder="Password">
-    <button onclick="loginUser()" class="btn">Login</button>
-    <button onclick="registerUser()" class="btn gray">Register</button>
-    <p id="auth-message" class="small"></p>
-  </div>
-</div>
-
-<div id="main-app" style="display:none">
+<div id="main-app" style="display:block">
 
 <section id="home" class="menu-section active">
   <div class="hero">
@@ -129,7 +115,7 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 <section id="profile" class="menu-section">
   <div class="hero"><h2> Profile</h2><p>EarnFast account</p></div>
   <div class="card">
-    <div class="item"><span>Email</span><b id="profileEmail">—</b></div>
+    <div class="item"><span>Account</span><b id="profileEmail">Guest User</b></div>
     <div class="item"><span>Referral Code</span><b id="refCode">EF-DEMO</b></div>
     <button class="btn gray" onclick="logoutUser()">Logout</button>
   </div>
@@ -155,17 +141,7 @@ input{width:100%;padding:12px;margin:6px 0 12px;border:1px solid #ccc;border-rad
 </div>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBmUmC8b4Mo5bvm5talm94b2TgsCnHxK-s",
-  authDomain: "earnfast-9f943.firebaseapp.com",
-  projectId: "earnfast-9f943",
-  storageBucket: "earnfast-9f943.appspot.com",
-  messagingSenderId: "294256759308",
-  appId: "1:294256759308:web:5fffe8c6f85101d4da5429",
-  measurementId: "G-WNXCPT66K4"
-};
 
-firebase.initializeApp(firebaseConfig);
 
 let points = Number(localStorage.getItem('earnfast_points') || 0);
 let todayEarned = Number(localStorage.getItem('earnfast_today') || 0);
@@ -214,40 +190,9 @@ function withdraw(){
   if(amount*10 > points){msg.textContent='Wallet balance insufficient.';return;}
   msg.textContent='Withdrawal request recorded locally. Real UPI payout ke liye secure backend/payment provider integration zaroori hai.';
 }
-function authError(e){
-  const map={
-    'auth/invalid-credential':'Email ya password galat hai.',
-    'auth/wrong-password':'Password galat hai.',
-    'auth/user-not-found':'Is email se account nahi mila. Pehle Register karo.',
-    'auth/email-already-in-use':'Ye email pehle se registered hai. Login karo.',
-    'auth/weak-password':'Password kam se kam 6 characters ka rakho.',
-    'auth/operation-not-allowed':'Firebase Console me Email/Password sign-in enable nahi hai.',
-    'auth/unauthorized-domain':'Is website domain ko Firebase Authentication me authorize karo.',
-    'auth/network-request-failed':'Internet connection check karo.'
-  };
-  document.getElementById('auth-message').textContent=map[e.code] || ('Login error: '+(e.message||e.code||'Unknown error'));
+sync();
 }
-function registerUser(){
-  const email=document.getElementById('auth-email').value.trim(), password=document.getElementById('auth-password').value;
-  const msg=document.getElementById('auth-message');
-  if(!email||!password){msg.textContent='Email aur password enter karo.';return;}
-  firebase.auth().createUserWithEmailAndPassword(email,password).then(loginSuccess).catch(authError);
-}
-function loginUser(){
-  const email=document.getElementById('auth-email').value.trim(), password=document.getElementById('auth-password').value;
-  const msg=document.getElementById('auth-message');
-  if(!email||!password){msg.textContent='Email aur password enter karo.';return;}
-  msg.textContent='Login ho raha hai...';
-  firebase.auth().signInWithEmailAndPassword(email,password).then(loginSuccess).catch(authError);
-}
-function loginSuccess(){
-  document.getElementById('auth-container').style.display='none';
-  document.getElementById('main-app').style.display='block';
-  const email=(typeof firebase!=='undefined' && firebase.auth && firebase.auth().currentUser) ? firebase.auth().currentUser.email : (localStorage.getItem('earnfast_email') || 'User');
-  document.getElementById('profileEmail').textContent=email;
-  sync();
-}
-function logoutUser(){ location.reload(); }
+function logoutUser(){ alert('Guest mode me logout ki zarurat nahi hai.'); }
 sync();
 </script>
 </body>
